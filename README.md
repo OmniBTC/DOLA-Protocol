@@ -1,4 +1,4 @@
-# yellow-paper
+# yellow-paper (omnichain lending protocol)
 
 The yellow paper of the omnichain lending protocol is available here: [English](./en/OMNI_Protocol.pdf) and [Chinese](./cn/OMNI_Protocol.pdf) versions.
 
