@@ -10,6 +10,6 @@ The yellow paper of the Omni Protocol is available here.Omni Protocol is a chain
 
 # More
 
-More details can be found here: [English](./en/Omni_Protocol.pdf) and [Chinese](./cn/Omni_Protocol.pdf) versions
+More details can be found here: [English](./en/README.md) and [Chinese](./cn/README.md) versions
 
 Any question/cooperation request:business@chainnet.tech
