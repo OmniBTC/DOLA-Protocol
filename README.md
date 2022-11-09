@@ -8,7 +8,7 @@ Omni Protocol is a chain-wide liquidity aggregation and settlement system with t
 
 ## Protocol Architecture
 <div align=center>
-<img src="https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1667979573740OmniPool-Architecture.png">
+<img src="https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1667980363740OmniPool-Architecture-%E7%AC%AC%201%20%E9%A1%B5.drawio.png">
 </div>
 
 ## More
