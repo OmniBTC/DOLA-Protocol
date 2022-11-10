@@ -55,7 +55,7 @@ The lending protocol, represented by Aave, provides the ability to lend to a few
 
 Reserves: In lending agreements, in rare cases the value of a borrower's collateral may be less than the value of its liabilities, in which case the borrower's ability to repay is referred to as insolvency. When an insolvent borrower is liquidated, there will be remaining liabilities that are considered to be bad debt. If bad debts appear to accumulate, lenders may all come at once to withdraw funds to avoid becoming a bad debtor. To mitigate this risk, follow Compound's practice of agreeing to draw down a portion of the interest accumulated into a reserve. If bad debts arise and the reserve is used to make repayments, the lender can avoid becoming the bearer of bad debts as long as the reserve accumulates faster than the bad debts. The percentage of interest withdrawn to become a reserve is called the reserve factor and is noted as $RF$. Different assets have different $RF$. The $RF$ takes on a value between 0 and 1 and can be adjusted for trade-offs through governance.
 
-Funding Utilization: Funding Utilization is the ratio of current borrowed funds to supplied funds. $U_c$ represents funding utilization, $D_c$ represents borrowed funds, and $D_c$ represents remaining funds.
+Funding Utilization: Funding Utilization is the ratio of current borrowed funds to supplied funds. $U_c$ represents funding utilization, $D_c$ represents borrowed funds, and $L_c$ represents remaining funds.
 
 $$U_c=\frac{D_c}{D_c+L_c}$$
 
