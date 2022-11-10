@@ -12,7 +12,7 @@ Omni Protocol是以各公链的单币池为核心，以Wormhole, Layerzero等跨
 
 # **2 协议架构**
 
-![](https://fastly.jsdelivr.net/gh/AAweidai/PictureBed@master/taproot/1667976165980OmniPool-Architecture.drawio.png)
+![](https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1668049279740OmniPool-Architecture-%E7%AC%AC%201%20%E9%A1%B5.drawio.png)
 
 ## 2.1 流动性层
 
@@ -53,69 +53,69 @@ Sui结算中心的应用管理器负责管理协议支持的应用。Omni Protoc
 
 **利率模型**
 
-储备金：借贷协议中，极少数情况下借款人抵押品的价值可能会低于其负债的价值，在这种情况下，借款人的能力被称为无力偿还。无力偿还的借款人被清算后，会出现剩余的负债被认为是坏账。如果坏账出现累积，贷款人可能一下子都来提取资金以避免成为坏账的承担者。为了减少这种风险，遵循Compound的做法，协议提取一部分利息积累成储备金。如果出现坏账，利用储备金进行偿还，只要储备金的积累速度高于坏账，就能避免贷款人成为坏账的承担者。提取成为储备金的利息比例称为储备金系数，记做![](http://latex.codecogs.com/svg.latex?RF)。不同的资产有不同的![](http://latex.codecogs.com/svg.latex?RF) 。![](http://latex.codecogs.com/svg.latex?RF)取值在0和1之间，可以通过治理来进行调整权衡。
+储备金：借贷协议中，极少数情况下借款人抵押品的价值可能会低于其负债的价值，在这种情况下，借款人的能力被称为无力偿还。无力偿还的借款人被清算后，会出现剩余的负债被认为是坏账。如果坏账出现累积，贷款人可能一下子都来提取资金以避免成为坏账的承担者。为了减少这种风险，遵循Compound的做法，协议提取一部分利息积累成储备金。如果出现坏账，利用储备金进行偿还，只要储备金的积累速度高于坏账，就能避免贷款人成为坏账的承担者。提取成为储备金的利息比例称为储备金系数，记做$RF$。不同的资产有不同的$RF$ 。$RF$取值在0和1之间，可以通过治理来进行调整权衡。
 
-资金利用率：资金利用率是当前借贷资金和供应资金的比例。![](http://latex.codecogs.com/svg.latex?U_c)代表资金利用率，![](http://latex.codecogs.com/svg.latex?D_c)代表借贷资金，![](http://latex.codecogs.com/svg.latex?L_c)代表剩余资金。
+资金利用率：资金利用率是当前借贷资金和供应资金的比例。$U_c$代表资金利用率，$D_c$代表借贷资金，$D_c$代表剩余资金。
 
-![](http://latex.codecogs.com/svg.latex?U_c=\frac{D_c}{D_c+L_c})
+$$U_c=\frac{D_c}{D_c+L_c}$$
 
-借款利率：Aave和Compound使用静态线性利率模型来决定协议的借贷成本。简单来说，当从池子里的借贷需求增加或者供应减少，利率上升，而当供应增加或者借贷需求减少，利率下降。![](http://latex.codecogs.com/svg.latex?BR_b)代表基础借款利率。![](http://latex.codecogs.com/svg.latex?U_{optimal})代表最佳资金利用率。![](http://latex.codecogs.com/svg.latex?BR_{slope1})代表当前资金利用率低于最佳资金利用率时，利率与利用率的比例关系的常数。![](http://latex.codecogs.com/svg.latex?BR_{slope2})代表当前资金利用率高于最佳资金利用率时，利率与利用率的比例关系的常数。![](http://latex.codecogs.com/svg.latex?BR_c)代表当前借款利率。 
+借款利率：Aave和Compound使用静态线性利率模型来决定协议的借贷成本。简单来说，当从池子里的借贷需求增加或者供应减少，利率上升，而当供应增加或者借贷需求减少，利率下降。$BR_b$代表基础借款利率。$U_{optimal}$代表最佳资金利用率。$BR_{slope1}$代表当前资金利用率低于最佳资金利用率时，利率与利用率的比例关系的常数。$BR_{slope2}$代表当前资金利用率高于最佳资金利用率时，利率与利用率的比例关系的常数。$BR_c$代表当前借款利率。
 
-![](http://latex.codecogs.com/svg.latex?BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases})
+$$BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases}$$
 
-流动性利率：流动性利率是贷款人提供贷款应获利息的利率，资金来源于借款利率，用![](http://latex.codecogs.com/svg.latex?LR_c)表示。
+流动性利率：流动性利率是贷款人提供贷款应获利息的利率，资金来源于借款利率，用$LR_c$表示。
 
-![](http://latex.codecogs.com/svg.latex?LR_c=BR_c*U_c*(1-RF))
+$$LR_c=BR_c*U_c*(1-RF)$$
 
-累积借贷指数：表示随着时间的累积，借款人应付利息的累积指数。![](http://latex.codecogs.com/svg.latex?\Delta{T}) 代表当前时间到上一次更新的间隔时间，![](http://latex.codecogs.com/svg.latex?T_{year})代表一年时间，单位为秒。
+累积借贷指数：表示随着时间的累积，借款人应付利息的累积指数。$\Delta{T}$ 代表当前时间到上一次更新的间隔时间，$T_{year}$代表一年时间，单位为秒。
 
-![](http://latex.codecogs.com/svg.latex?BL_t=(\frac{BR_c}{T_{year}}+1)^{\Delta{T}}*BL_{t-1},BL_0=1)
+$$BL_t=(\frac{BR_c}{T_{year}}+1)^{\Delta{T}}*BL_{t-1},BL_0=1$$
 
-累积流动性指数：表示随着时间的累积，贷款人应获利息的累积指数。![](http://latex.codecogs.com/svg.latex?\Delta{T}) 代表当前时间到上一次更新的间隔时间，![](http://latex.codecogs.com/svg.latex?T_{year})代表一年时间，单位为秒。
+累积流动性指数：表示随着时间的累积，贷款人应获利息的累积指数。$\Delta{T}$ 代表当前时间到上一次更新的间隔时间，$T_{year}$代表一年时间，单位为秒。
 
-![](http://latex.codecogs.com/svg.latex?CL_t=(\frac{LR_c*\Delta{T}}{T_{year}}+1)*CL_{t-1},CL_0=1)
+$$CL_t=(\frac{LR_c*\Delta{T}}{T_{year}}+1)*CL_{t-1},CL_0=1$$
 
-利率模型参考了目前Aave和Compound的成熟做法进行建模，不同的地方是储备金系数![](http://latex.codecogs.com/svg.latex?RF)所获得的利息会成为一个特殊的借款人，加入累积流动性指数从而自动获得利息，进一步增加协议抵御坏账风险的能力。
+利率模型参考了目前Aave和Compound的成熟做法进行建模，不同的地方是储备金系数$RF$所获得的利息会成为一个特殊的借款人，加入累积流动性指数从而自动获得利息，进一步增加协议抵御坏账风险的能力。
 
 **权益化代币(oToken)**
 
-权益化代币oToken是存款人存款后收到的衍生代币。权益化代币oToken会随着![](http://latex.codecogs.com/svg.latex?CL_t)的增加而自动累积，增加的数量代表存款用户所获得的利息。![](http://latex.codecogs.com/svg.latex?SoT_t) **用来表示用户在t时刻拥有的scaled oToken的数量。![](http://latex.codecogs.com/svg.latex?m)用来表示用户存款/提现数量为![](http://latex.codecogs.com/svg.latex?m)的代币。![](http://latex.codecogs.com/svg.latex?oT_t)用来表示用户在![](http://latex.codecogs.com/svg.latex?t)时刻oToken的数量。权益化代币oToken的数量由![](http://latex.codecogs.com/svg.latex?SoT_t)和![](http://latex.codecogs.com/svg.latex?CL_t)共同决定，如下所示：
+权益化代币oToken是存款人存款后收到的衍生代币。权益化代币oToken会随着$CL_t$的增加而自动累积，增加的数量代表存款用户所获得的利息。$SoT_t$ **用来表示用户在t时刻拥有的scaled oToken的数量。$m$用来表示用户存款/提现数量为$m$的代币。$oT_t$用来表示用户在$t$时刻oToken的数量。权益化代币oToken的数量由$SoT_t$和$CL_t$共同决定，如下所示：
 
 用户存款：
 
-![](http://latex.codecogs.com/svg.latex?SoT_t=SoT_{t-1}+\frac{m}{CL_{t}})
+$$SoT_t=SoT_{t-1}+\frac{m}{CL_{t}}$$
 
-![](http://latex.codecogs.com/svg.latex?oT_t=SoT_t*CL_t)
+$$oT_t=SoT_t*CL_t$$
 
 用户提现：
 
-![](http://latex.codecogs.com/svg.latex?SoT_t=SoT_{t-1}-\frac{m}{CL_{t}})
+$$SoT_t=SoT_{t-1}-\frac{m}{CL_{t}}$$
 
-![](http://latex.codecogs.com/svg.latex?oT_t=SoT_t*CL_t)
+$$oT_t=SoT_t*CL_t$$
 
 **债务化代币(dToken)**
 
-债务化代币dToken是借款人借款产生的债务。债务化代币dToken随着![](http://latex.codecogs.com/svg.latex?BL_t)的增加而自动累积，增加的数量代表借款用户所要付出的利息。![](http://latex.codecogs.com/svg.latex?SdT_t) 用来表示用户在t时刻拥有的scaled dToken的数量。![](http://latex.codecogs.com/svg.latex?m)用来表示用户借款/还款数量为![](http://latex.codecogs.com/svg.latex?m)的代币。![](http://latex.codecogs.com/svg.latex?dT_t)用来表示用户在![](http://latex.codecogs.com/svg.latex?t)时刻oToken的数量。债务化代币dToken的数量由![](http://latex.codecogs.com/svg.latex?SdT_t)和![](http://latex.codecogs.com/svg.latex?BL_t)共同决定，如下所示：
+债务化代币dToken是借款人借款产生的债务。债务化代币dToken随着$BL_t$的增加而自动累积，增加的数量代表借款用户所要付出的利息。$SdT_t$ 用来表示用户在t时刻拥有的scaled dToken的数量。$m$用来表示用户借款/还款数量为$m$的代币。$dT_t$用来表示用户在$t$时刻oToken的数量。债务化代币dToken的数量由$SdT_t$和$BL_t$共同决定，如下所示：
 
 用户借款：
 
-![](http://latex.codecogs.com/svg.latex?SdT_t=SdT_{t-1}+\frac{m}{BL_{t}})
+$$SdT_t=SdT_{t-1}+\frac{m}{BL_{t}}$$
 
-![](http://latex.codecogs.com/svg.latex?dT_t=SdT_t*BL_t)
+$$dT_t=SdT_t*BL_t$$
 
 用户还款：
 
-![](http://latex.codecogs.com/svg.latex?SdT_t=SdT_{t-1}-\frac{m}{BL_{t}})
+$$SdT_t=SdT_{t-1}-\frac{m}{BL_{t}}$$
 
-![](http://latex.codecogs.com/svg.latex?dT_t=SdT_t*BL_t)
+$$dT_t=SdT_t*BL_t$$
 
 **清算**
 
 清算是当用户的负债价值和抵押品价值不满协议规定的超额抵押要求时，用户抵押品会被清算来偿还用户负债。
 
-风险调整：不同于传统借贷，仅仅考虑用户抵押品价值降低带来的坏账风险。协议同时考虑负债价值上升带来的风险，通过![](http://latex.codecogs.com/svg.latex?BF)(大于1)将负债价值提升来抵御这种风险。![](http://latex.codecogs.com/svg.latex?CF)(小于1)用于降低抵押品价值。当用户的抵押品价值![](http://latex.codecogs.com/svg.latex?TotalCollateral)和负债价值![](http://latex.codecogs.com/svg.latex?TotalDebt)不满足如下公式时，会被清算。
+风险调整：不同于传统借贷，仅仅考虑用户抵押品价值降低带来的坏账风险。协议同时考虑负债价值上升带来的风险，通过$BF$(大于1)将负债价值提升来抵御这种风险。$CF$(小于1)用于降低抵押品价值。当用户的抵押品价值$TotalCollateral$和负债价值$TotalDebt$不满足如下公式时，会被清算。
 
-![](http://latex.codecogs.com/svg.latex?TotalCollateral*CF>=TotalDebt*BF)
+$$TotalCollateral*CF>=TotalDebt*BF$$
 
 抗MEV能力：在传统借贷中，清算的激励方式是将借款人的抵押品以固定百分比的折扣提供给清算人，通常在5%-10%之间。清算人是有利可图的，但是不抗MEV，因为矿工和跑在前面的人可以窃取清算人的交易。为了限制这种形式的MEV，协议允许流动性提供者有资格获取折扣，矿工和其他人没有折扣。
 
@@ -135,28 +135,28 @@ PMM是主动做市商算法，来源于DODO协议。相比于传统的AMM，PMM�
 
 **边际价格**
 
-边际价格![](http://latex.codecogs.com/svg.latex?P)是当前状态下的瞬时价格，用来表示多少个quote token可以买一个base token。![](http://latex.codecogs.com/svg.latex?B_0)表示做市商的base token总充值，![](http://latex.codecogs.com/svg.latex?Q_0)表示做市商的quote token总充值。B表示当前资产池的base token总数量，Q表示当前资产池的quote token总数量。![](http://latex.codecogs.com/svg.latex?i)是由预言机提供的市价，![](http://latex.codecogs.com/svg.latex?k)是一个在0到1范围内的参数。
+边际价格$P$是当前状态下的瞬时价格，用来表示多少个quote token可以买一个base token。$B_0$表示做市商的base token总充值，$Q_0$表示做市商的quote token总充值。B表示当前资产池的base token总数量，Q表示当前资产池的quote token总数量。$i$是由预言机提供的市价，$k$是一个在0到1范围内的参数。
 
-![](http://latex.codecogs.com/svg.latex?P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases})
+$$P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases}$$
 
 
-从边际价格公式可以看出，k为0时，边际价格恒等于预言机提供的市价，无滑点，资金利用率高。k为1时，退化为传统的AMM，必须按照当前价格比例同时冲提两种资产，滑点高，资金利用率低。当池子中的资产数量![](http://latex.codecogs.com/svg.latex?B)和![](http://latex.codecogs.com/svg.latex?Q)偏离![](http://latex.codecogs.com/svg.latex?B_0)和![](http://latex.codecogs.com/svg.latex?Q_0)时，会导致当前价格高于和低于外部价格，促使套利者套利，使得![](http://latex.codecogs.com/svg.latex?B)和![](http://latex.codecogs.com/svg.latex?Q)回归目标数量![](http://latex.codecogs.com/svg.latex?B_0)和![](http://latex.codecogs.com/svg.latex?Q_0)。值得注意的是，当系统处于不平衡状态时，预言机的价格变化会带来盈利或亏损。如当base token短缺且预言机价格base token上涨，多余的quote token价值低于base token回归到平衡状态的价值，做市商就会出现亏损。因此对于边际价格波动大的base token和quote token，需要设置一个较大的k，减少做市商出现亏损的风险。
+从边际价格公式可以看出，k为0时，边际价格恒等于预言机提供的市价，无滑点，资金利用率高。k为1时，退化为传统的AMM，必须按照当前价格比例同时冲提两种资产，滑点高，资金利用率低。当池子中的资产数量$B$和$Q$偏离$B_0$和$Q_0$时，会导致当前价格高于和低于外部价格，促使套利者套利，使得$B$和$Q$回归目标数量$B_0$和$Q_0$。值得注意的是，当系统处于不平衡状态时，预言机的价格变化会带来盈利或亏损。如当base token短缺且预言机价格base token上涨，多余的quote token价值低于base token回归到平衡状态的价值，做市商就会出现亏损。因此对于边际价格波动大的base token和quote token，需要设置一个较大的k，减少做市商出现亏损的风险。
 
 **平均价格**
 
 如下公式，对边际价格积分，可以得到平均价格P。通过平均价格P，可以得出交易者想买卖一定数量的base token和quote token时，需要支付的token数量。
 
-![](http://latex.codecogs.com/svg.latex?P=\frac{Q_1-Q_2}{B_2-B_1}=i*(1-k+k*\frac{B_0^2}{B_1*B_2})=\frac{i}{1-k+k*\frac{Q_0^2}{Q_1*Q_2}})
+$$P=\frac{Q_1-Q_2}{B_2-B_1}=i*(1-k+k*\frac{B_0^2}{B_1*B_2})=\frac{i}{1-k+k*\frac{Q_0^2}{Q_1*Q_2}}$$
 
 **回归目标**
 
-![](http://latex.codecogs.com/svg.latex?B_0)和![](http://latex.codecogs.com/svg.latex?Q_0)是回归目标，将![](http://latex.codecogs.com/svg.latex?B_0)和![](http://latex.codecogs.com/svg.latex?Q_0)代入平均价格公式，求解二元一次方程可以得出
+$B_0$和$Q_0$是回归目标，将$B_0$和$Q_0$代入平均价格公式，求解二元一次方程可以得出
 
-![](http://latex.codecogs.com/svg.latex?B_0=B_1+B_1*\frac{\sqrt{1+\frac{4*k*\Delta{Q}}{B_1^2*i}}-1}{2*k})
+$$B_0=B_1+B_1*\frac{\sqrt{1+\frac{4*k*\Delta{Q}}{B_1^2*i}}-1}{2*k}$$
 
-![](http://latex.codecogs.com/svg.latex?Q_0=Q_1+Q_1*\frac{\sqrt{1+\frac{4*k*\Delta{B}*i}{Q_1^2}}-1}{2*k})
+$$Q_0=Q_1+Q_1*\frac{\sqrt{1+\frac{4*k*\Delta{B}*i}{Q_1^2}}-1}{2*k}$$
 
-做市商充值base token时![](http://latex.codecogs.com/svg.latex?B_1)上涨b，![](http://latex.codecogs.com/svg.latex?B_0)上涨幅度更大，因此做市商一旦充入资金，会导致所有base token做市商盈利，协议会提供充值奖励做市商，奖励主要是由让系统偏离平衡状态的交易者支付的，quote token遵循同样的规则。反之，做市商提现，会让所有的做市商遭受亏损，因此提现需要支付一定的手续费。手续费等于这笔引起的做市商的亏损总和，并被分配给还未提现的做市商。
+做市商充值base token时$B_1$上涨b，$B_0$上涨幅度更大，因此做市商一旦充入资金，会导致所有base token做市商盈利，协议会提供充值奖励做市商，奖励主要是由让系统偏离平衡状态的交易者支付的，quote token遵循同样的规则。反之，做市商提现，会让所有的做市商遭受亏损，因此提现需要支付一定的手续费。手续费等于这笔引起的做市商的亏损总和，并被分配给还未提现的做市商。
 
 总的来说，新型Dex应用利用PMM算法，让用户可以在任意公链充值资产进行单边做市。同时灵活的参数配置，可以带来更低的滑点，减少无常损失，以及更优秀的用户体验。
 
@@ -206,19 +206,19 @@ Web3世界一直在不断的发展，日新月异。金融和非金融的Web3应
 
 单币池需要对外提供充值的接口，以及对消息协议桥提供提现的接口，并且要对来自应用的消息进行打包再发送给桥。
 
-![](https://fastly.jsdelivr.net/gh/AAweidai/PictureBed@master/taproot/1667976136685OmniPool-Architecture-%E7%AC%AC_2_%E9%A1%B5.drawio.png)
+![](https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1668049328740OmniPool-Architecture-%E7%AC%AC%202%20%E9%A1%B5.drawio.png)
 
 ## 3.2 消息协议桥合约
 
 消息协议桥需要根据接入的消息协议进行兼容，只负责消息的传递。
 
-![](https://fastly.jsdelivr.net/gh/AAweidai/PictureBed@master/taproot/1667976146153OmniPool-Architecture-%E7%AC%AC_3_%E9%A1%B5.drawio.png)
+![](https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1668049392740OmniPool-Architecture-%E7%AC%AC%203%20%E9%A1%B5.drawio.png)
 
 ## 3.3 协议核心合约
 
 协议核心分为3个部分，分别是消息处理、应用逻辑和治理。第一部分是消息处理，消息处理主要负责将消息进行解码并分发到相应的应用逻辑合约，同时也要负责将不同应用的消息进行编码发送给消息桥；第二部分是应用逻辑，每个应用逻辑都对应着相应的应用消息，并对协议的用户信息和单币池进行相应的更新；第三部分是治理，治理需要对协议全局的权限进行控制和管理，包括对Bridge的授权、消息类型的添加和应用的权限设置等。
 
-![](https://fastly.jsdelivr.net/gh/AAweidai/PictureBed@master/taproot/1667976154156OmniPool-Architecture-%E7%AC%AC_4_%E9%A1%B5.drawio.png)
+![](https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1668049436740OmniPool-Architecture-%E7%AC%AC%204%20%E9%A1%B5.drawio.png)
 
 # 4 **展望**
 
