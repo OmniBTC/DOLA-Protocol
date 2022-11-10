@@ -63,7 +63,7 @@ Borrowing rate: Aave and Compound use a static linear interest rate model to det
 
 $$BR_c=\begin{cases}
 BR_b+U_c*BR_{slope1}\,U_c\lt U_{optimal}\\
-BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\gte U_{optimal}\\
+BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\geq U_{optimal}\\
 \end{cases}$$
 
 Liquidity Rate: The liquidity rate is the interest rate at which a lender should receive interest for providing a loan, funded by the borrowing rate, expressed as $LR_c$.
