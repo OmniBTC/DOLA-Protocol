@@ -53,69 +53,69 @@ The lending protocol, represented by Aave, provides the ability to lend to a few
 
 **Interest Rate Model**
 
-Reserves: In lending agreements, in rare cases the value of a borrower's collateral may be less than the value of its liabilities, in which case the borrower's ability to repay is referred to as insolvency. When an insolvent borrower is liquidated, there will be remaining liabilities that are considered to be bad debt. If bad debts appear to accumulate, lenders may all come at once to withdraw funds to avoid becoming a bad debtor. To mitigate this risk, follow Compound's practice of agreeing to draw down a portion of the interest accumulated into a reserve. If bad debts arise and the reserve is used to make repayments, the lender can avoid becoming the bearer of bad debts as long as the reserve accumulates faster than the bad debts. The percentage of interest withdrawn to become a reserve is called the reserve factor and is noted as $RF$. Different assets have different $RF$. The $RF$ takes on a value between 0 and 1 and can be adjusted for trade-offs through governance.
+Reserves: In lending agreements, in rare cases the value of a borrower's collateral may be less than the value of its liabilities, in which case the borrower's ability to repay is referred to as insolvency. When an insolvent borrower is liquidated, there will be remaining liabilities that are considered to be bad debt. If bad debts appear to accumulate, lenders may all come at once to withdraw funds to avoid becoming a bad debtor. To mitigate this risk, follow Compound's practice of agreeing to draw down a portion of the interest accumulated into a reserve. If bad debts arise and the reserve is used to make repayments, the lender can avoid becoming the bearer of bad debts as long as the reserve accumulates faster than the bad debts. The percentage of interest withdrawn to become a reserve is called the reserve factor and is noted as  $ RF $ . Different assets have different  $ RF $ . The  $ RF $  takes on a value between 0 and 1 and can be adjusted for trade-offs through governance.
 
-Funding Utilization: Funding Utilization is the ratio of current borrowed funds to supplied funds. $U_c$ represents funding utilization, $D_c$ represents borrowed funds, and $D_c$ represents remaining funds.
+Funding Utilization: Funding Utilization is the ratio of current borrowed funds to supplied funds.  $ U_c $  represents funding utilization,  $ D_c $  represents borrowed funds, and  $ D_c $  represents remaining funds.
 
-$$U_c=\frac{D_c}{D_c+L_c}$$
+ $$ U_c=\frac{D_c}{D_c+L_c} $$ 
 
-Borrowing rate: Aave and Compound use a static linear interest rate model to determine the borrowing cost of the agreement. Simply put, when the demand for borrowing from the pool increases or the supply decreases, the interest rate increases, while when the supply increases or the demand for borrowing decreases, the interest rate decreases. $BR_b$ represents the base borrowing rate. $U_{optimal}$ represents the optimal funding utilization rate. $BR_{slope1}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is lower than the optimal funding utilization rate. $BR_{slope2}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is higher than the optimal funding utilization rate. $BR_c$ represents the current borrowing rate.
+Borrowing rate: Aave and Compound use a static linear interest rate model to determine the borrowing cost of the agreement. Simply put, when the demand for borrowing from the pool increases or the supply decreases, the interest rate increases, while when the supply increases or the demand for borrowing decreases, the interest rate decreases.  $ BR_b $  represents the base borrowing rate.  $ U_{optimal} $  represents the optimal funding utilization rate.  $ BR_{slope1} $  represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is lower than the optimal funding utilization rate.  $ BR_{slope2} $  represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is higher than the optimal funding utilization rate.  $ BR_c $  represents the current borrowing rate.
 
-$$BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases}$$
+ $$ BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases} $$ 
 
-Liquidity Rate: The liquidity rate is the interest rate at which a lender should receive interest for providing a loan, funded by the borrowing rate, expressed as $LR_c$.
+Liquidity Rate: The liquidity rate is the interest rate at which a lender should receive interest for providing a loan, funded by the borrowing rate, expressed as  $ LR_c $ .
 
-$$LR_c=BR_c*U_c*(1-RF)$$
+ $$ LR_c=BR_c*U_c*(1-RF) $$ 
 
-Cumulative Debit Index: indicates the cumulative index of interest payable by the borrower as time accumulates. $\Delta{T}$ represents the interval between the current time and the last update, and $T_{year}$ represents the time of a year in seconds.
+Cumulative Debit Index: indicates the cumulative index of interest payable by the borrower as time accumulates.  $ \Delta{T} $  represents the interval between the current time and the last update, and  $ T_{year} $  represents the time of a year in seconds.
 
-$$BL_t=(\frac{BR_c}{T_{year}}+1)^{\Delta{T}}*BL_{t-1},BL_0=1$$
+ $$ BL_t=(\frac{BR_c}{T_{year}}+1)^{\Delta{T}}*BL_{t-1},BL_0=1 $$ 
 
-Cumulative Liquidity Index: Indicates the cumulative index of interest due to the lender as time accumulates. $\Delta{T}$ represents the interval between the current time and the last update, and $T_{year}$ represents the time of a year in seconds.
+Cumulative Liquidity Index: Indicates the cumulative index of interest due to the lender as time accumulates.  $ \Delta{T} $  represents the interval between the current time and the last update, and  $ T_{year} $  represents the time of a year in seconds.
 
-$$CL_t=(\frac{LR_c*\Delta{T}}{T_{year}}+1)*CL_{t-1},CL_0=1$$
+ $$ CL_t=(\frac{LR_c*\Delta{T}}{T_{year}}+1)*CL_{t-1},CL_0=1 $$ 
 
-The interest rate model refers to the current established practice of Aave and Compound for interest rate modeling, with the difference that the interest earned on the reserve factor $RF$ becomes a special borrower that is added to the accumulated liquidity index thereby automatically earning interest and further increasing the ability of the agreement to withstand bad debt risk.
+The interest rate model refers to the current established practice of Aave and Compound for interest rate modeling, with the difference that the interest earned on the reserve factor  $ RF $  becomes a special borrower that is added to the accumulated liquidity index thereby automatically earning interest and further increasing the ability of the agreement to withstand bad debt risk.
 
 Rights-based tokens (oToken)
 
-The entitlement token oToken is a derivative token received by the depositor after making a deposit. The entitlement token oToken is automatically accumulated as $CL_t$ increases, and the increase represents the interest received by the depositing user. $SoT_t$ is used to indicate the number of scaled oToken the user has at moment t. $m$ is used to represent the number of tokens with $m$ deposited/withdrawn by the user. $oT_t$ is used to denote the number of oTokens the user has at moment $t$. The number of entitled tokens oToken is determined by both $SoT_t$ and $CL_t$, as follows.
+The entitlement token oToken is a derivative token received by the depositor after making a deposit. The entitlement token oToken is automatically accumulated as  $ CL_t $  increases, and the increase represents the interest received by the depositing user.  $ SoT_t $  is used to indicate the number of scaled oToken the user has at moment t.  $ m $  is used to represent the number of tokens with  $ m $  deposited/withdrawn by the user.  $ oT_t $  is used to denote the number of oTokens the user has at moment  $ t $ . The number of entitled tokens oToken is determined by both  $ SoT_t $  and  $ CL_t $ , as follows.
 
 User Deposit：
 
-$$SoT_t=SoT_{t-1}+\frac{m}{CL_{t}}$$
+ $$ SoT_t=SoT_{t-1}+\frac{m}{CL_{t}} $$ 
 
-$$oT_t=SoT_t*CL_t$$
+ $$ oT_t=SoT_t*CL_t $$ 
 
 User Withdraw：
 
-$$SoT_t=SoT_{t-1}-\frac{m}{CL_{t}}$$
+ $$ SoT_t=SoT_{t-1}-\frac{m}{CL_{t}} $$ 
 
-$$oT_t=SoT_t*CL_t$$
+ $$ oT_t=SoT_t*CL_t $$ 
 
 **Debt-enabled token (dToken)**
 
-The debtification token dToken is the debt incurred by the borrower to borrow money. The debtification token dToken automatically accumulates as $BL_t$ increases, and the increase represents the amount of interest the borrowing user will pay. $SdT_t$ is used to indicate the number of scaled dTokens a user has at time t.  $m$ is used to denote the number of tokens the user borrowed/repaid in $m$. $dT_t$ is used to denote the number of oToken the user has at moment . The number of debtified tokens dToken is determined by both $SdT_t$ and $BL_t$, as follows.
+The debtification token dToken is the debt incurred by the borrower to borrow money. The debtification token dToken automatically accumulates as  $ BL_t $  increases, and the increase represents the amount of interest the borrowing user will pay.  $ SdT_t $  is used to indicate the number of scaled dTokens a user has at time t.   $ m $  is used to denote the number of tokens the user borrowed/repaid in  $ m $ .  $ dT_t $  is used to denote the number of oToken the user has at moment . The number of debtified tokens dToken is determined by both  $ SdT_t $  and  $ BL_t $ , as follows.
 
 User Borrow：
 
-$$SdT_t=SdT_{t-1}+\frac{m}{BL_{t}}$$
+ $$ SdT_t=SdT_{t-1}+\frac{m}{BL_{t}} $$ 
 
-$$dT_t=SdT_t*BL_t$$
+ $$ dT_t=SdT_t*BL_t $$ 
 
 User Repay：
 
-$$SdT_t=SdT_{t-1}-\frac{m}{BL_{t}}$$
+ $$ SdT_t=SdT_{t-1}-\frac{m}{BL_{t}} $$ 
 
-$$dT_t=SdT_t*BL_t$$
+ $$ dT_t=SdT_t*BL_t $$ 
 
 **Liquidation**
 
 Liquidation is when the value of a user's liabilities and collateral are less than the agreed upon over-collateralization requirements, and the user's collateral is liquidated to pay off the user's liabilities.
 
-Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debts due to a decrease in the value of the user's collateral. The agreement also takes into account the risk associated with an increase in the value of the liability, which is offset by a $BF$(greater than 1) increase in the value of the liability. $CF$(less than 1) is used to reduce the value of the collateral. When the user's collateral value $TotalCollateral$ and liability value $TotalDebt$ do not satisfy the following formula, they will be liquidated.
+Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debts due to a decrease in the value of the user's collateral. The agreement also takes into account the risk associated with an increase in the value of the liability, which is offset by a  $ BF $ (greater than 1) increase in the value of the liability.  $ CF $ (less than 1) is used to reduce the value of the collateral. When the user's collateral value  $ TotalCollateral $  and liability value  $ TotalDebt $  do not satisfy the following formula, they will be liquidated.
 
-$TotalCollateral*CF>=TotalDebt*BF$
+ $$ TotalCollateral*CF>=TotalDebt*BF $$
 
 Resistance to MEV: In Aave and Compound, the incentive for liquidation is to offer the borrower's collateral to the liquidator at a fixed percentage discount, usually between 5% and 10%. Liquidators are profitable, but not resistant to MEV because miners and front runners can steal transactions from the liquidators. To limit this form of MEV, the protocol allows liquidity providers to qualify for discounts, miners and others do not.
 
@@ -135,27 +135,27 @@ PMM is the active market maker algorithm, derived from the DODO protocol. Compar
 
 **Marginal Price**
 
-The marginal price $P$ is the instantaneous price in the current state and is used to indicate how many quote tokens can buy a base token. $B_0$ denotes the total base token recharge of the market maker and $Q_0$ denotes the total quote token recharge of the market maker. B denotes the total number of base tokens in the current asset pool and Q denotes the total number of quote tokens in the current asset pool. $i$ is the market price provided by the prediction machine and $k$ is a parameter in the range of 0 to 1.
+The marginal price  $ P $  is the instantaneous price in the current state and is used to indicate how many quote tokens can buy a base token.  $ B_0 $  denotes the total base token recharge of the market maker and  $ Q_0 $  denotes the total quote token recharge of the market maker. B denotes the total number of base tokens in the current asset pool and Q denotes the total number of quote tokens in the current asset pool.  $ i $  is the market price provided by the prediction machine and  $ k $  is a parameter in the range of 0 to 1.
 
-$$P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases}$$
+ $$ P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases} $$ 
 
-As can be seen from the marginal price formula, when k is 0, the marginal price is constantly equal to the market price offered by the prophecy machine, with no slippage and high capital utilization. k is 1, degenerating to the traditional AMM, where both assets must be charged in proportion to the current price, with high slippage and low capital utilization. When the number of assets $B$ and $Q$ in the pool deviates from $B_0$ and $Q_0$, it causes the current price to be higher and lower than the external price, prompting arbitrageurs to arbitrage, causing $B$ and $Q$ to return to the target quantities $B_0$ and $Q_0$. It is worth noting that when the system is in disequilibrium, price changes in the prognosticator can lead to profits or losses. For example, when there is a shortage of base token and the price of the prophecy machine base token increases, the excess quote token value is lower than the value of the base token returning to equilibrium, and the market maker will incur a loss. Therefore, for base token and quote token with high marginal price fluctuations, a larger k needs to be set to reduce the risk of market makers incurring losses.
+As can be seen from the marginal price formula, when k is 0, the marginal price is constantly equal to the market price offered by the prophecy machine, with no slippage and high capital utilization. k is 1, degenerating to the traditional AMM, where both assets must be charged in proportion to the current price, with high slippage and low capital utilization. When the number of assets  $ B $  and  $ Q $  in the pool deviates from  $ B_0 $  and  $ Q_0 $ , it causes the current price to be higher and lower than the external price, prompting arbitrageurs to arbitrage, causing  $ B $  and  $ Q $  to return to the target quantities  $ B_0 $  and  $ Q_0 $ . It is worth noting that when the system is in disequilibrium, price changes in the prognosticator can lead to profits or losses. For example, when there is a shortage of base token and the price of the prophecy machine base token increases, the excess quote token value is lower than the value of the base token returning to equilibrium, and the market maker will incur a loss. Therefore, for base token and quote token with high marginal price fluctuations, a larger k needs to be set to reduce the risk of market makers incurring losses.
 
 **Average price**
 
 The average price P is obtained by integrating the marginal price with the following formula, which gives the number of tokens a trader needs to pay to buy or sell a certain number of base tokens and quote tokens.
 
-$$P=\frac{Q_1-Q_2}{B_2-B_1}=i*(1-k+k*\frac{B_0^2}{B_1*B_2})=\frac{i}{1-k+k*\frac{Q_0^2}{Q_1*Q_2}}$$
+ $$ P=\frac{Q_1-Q_2}{B_2-B_1}=i*(1-k+k*\frac{B_0^2}{B_1*B_2})=\frac{i}{1-k+k*\frac{Q_0^2}{Q_1*Q_2}} $$ 
 
 **Regression target**
 
-$B_0$ and $Q_0$ are the regression targets, and substituting $B_0$ and $Q_0$ into the average price equation and solving the quadratic equation yields
+ $ B_0 $  and  $ Q_0 $  are the regression targets, and substituting  $ B_0 $  and  $ Q_0 $  into the average price equation and solving the quadratic equation yields
 
-$$B_0=B_1+B_1*\frac{\sqrt{1+\frac{4*k*\Delta{Q}}{B_1^2*i}}-1}{2*k}$$
+ $$ B_0=B_1+B_1*\frac{\sqrt{1+\frac{4*k*\Delta{Q}}{B_1^2*i}}-1}{2*k} $$ 
 
-$$Q_0=Q_1+Q_1*\frac{\sqrt{1+\frac{4*k*\Delta{B}*i}{Q_1^2}}-1}{2*k}$$
+ $$ Q_0=Q_1+Q_1*\frac{\sqrt{1+\frac{4*k*\Delta{B}*i}{Q_1^2}}-1}{2*k} $$ 
 
-Market makers top up base token when $B_1$ rises b and $B_0$ rises even more, so once a market maker fills up, it will cause all market makers to make a profit and the protocol will provide a top up to reward the market maker, the reward is mainly paid by the trader who made the system deviate from equilibrium. Conversely, a withdrawal by a market maker will cause all market makers to suffer a loss, and therefore a fee will be paid for the withdrawal. The handling fee is equal to the sum of the losses of the market makers caused by this withdrawal and is distributed to the market makers who have not yet withdrawn their money.
+Market makers top up base token when  $ B_1 $  rises b and  $ B_0 $  rises even more, so once a market maker fills up, it will cause all market makers to make a profit and the protocol will provide a top up to reward the market maker, the reward is mainly paid by the trader who made the system deviate from equilibrium. Conversely, a withdrawal by a market maker will cause all market makers to suffer a loss, and therefore a fee will be paid for the withdrawal. The handling fee is equal to the sum of the losses of the market makers caused by this withdrawal and is distributed to the market makers who have not yet withdrawn their money.
 
 Overall, the new Dex application uses the PMM algorithm to allow users to top up assets on any public chain for unilateral market making. Also the flexible parameter configuration leads to lower slippage, less impermanent losses, and a better user experience.
 
