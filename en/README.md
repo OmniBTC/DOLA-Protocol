@@ -61,7 +61,10 @@ $$U_c=\frac{D_c}{D_c+L_c}$$
 
 Borrowing rate: Aave and Compound use a static linear interest rate model to determine the borrowing cost of the agreement. Simply put, when the demand for borrowing from the pool increases or the supply decreases, the interest rate increases, while when the supply increases or the demand for borrowing decreases, the interest rate decreases. $BR_b$ represents the base borrowing rate. $U_{optimal}$ represents the optimal funding utilization rate. $BR_{slope1}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is lower than the optimal funding utilization rate. $BR_{slope2}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is higher than the optimal funding utilization rate. $BR_c$ represents the current borrowing rate.
 
-$$BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases}$$
+$$BR_c=\begin{cases}
+BR_b+U_c*BR_{slope1}\,U_c\lt U_{optimal}\\
+BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\gte U_{optimal}\\
+\end{cases}$$
 
 Liquidity Rate: The liquidity rate is the interest rate at which a lender should receive interest for providing a loan, funded by the borrowing rate, expressed as $LR_c$.
 
@@ -137,7 +140,10 @@ PMM is the active market maker algorithm, derived from the DODO protocol. Compar
 
 The marginal price $P$ is the instantaneous price in the current state and is used to indicate how many quote tokens can buy a base token. $B_0$ denotes the total base token recharge of the market maker and $Q_0$ denotes the total quote token recharge of the market maker. B denotes the total number of base tokens in the current asset pool and Q denotes the total number of quote tokens in the current asset pool. $i$ is the market price provided by the prediction machine and $k$ is a parameter in the range of 0 to 1.
 
-$$P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases}$$
+$$P=\begin
+{cases}i*(1-k+k*\frac{B_0^2}{B^2})\,B\lt B_0\\
+\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})}\,Q\lt Q_0\\
+\end{cases}$$
 
 As can be seen from the marginal price formula, when k is 0, the marginal price is constantly equal to the market price offered by the prophecy machine, with no slippage and high capital utilization. k is 1, degenerating to the traditional AMM, where both assets must be charged in proportion to the current price, with high slippage and low capital utilization. When the number of assets $B$ and $Q$ in the pool deviates from $B_0$ and $Q_0$, it causes the current price to be higher and lower than the external price, prompting arbitrageurs to arbitrage, causing $B$ and $Q$ to return to the target quantities $B_0$ and $Q_0$. It is worth noting that when the system is in disequilibrium, price changes in the prognosticator can lead to profits or losses. For example, when there is a shortage of base token and the price of the prophecy machine base token increases, the excess quote token value is lower than the value of the base token returning to equilibrium, and the market maker will incur a loss. Therefore, for base token and quote token with high marginal price fluctuations, a larger k needs to be set to reduce the risk of market makers incurring losses.
 

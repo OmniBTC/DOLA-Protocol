@@ -61,7 +61,10 @@ $$U_c=\frac{D_c}{D_c+L_c}$$
 
 借款利率：Aave和Compound使用静态线性利率模型来决定协议的借贷成本。简单来说，当从池子里的借贷需求增加或者供应减少，利率上升，而当供应增加或者借贷需求减少，利率下降。 $BR_b$代表基础借款利率。 $U_{optimal}$代表最佳资金利用率。 $BR_{slope1}$代表当前资金利用率低于最佳资金利用率时，利率与利用率的比例关系的常数。 $BR_{slope2}$代表当前资金利用率高于最佳资金利用率时，利率与利用率的比例关系的常数。 $BR_c$代表当前借款利率。
 
-$$BR_c=\begin{cases}BR_b+U_c*BR_{slope1},U_c<U_{optimal}\\\\BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2},U_c>=U_{optimal}\end{cases}$$
+$$BR_c=\begin{cases}
+BR_b+U_c*BR_{slope1}\,U_c\lt U_{optimal}\\
+BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\gte U_{optimal}
+\end{cases}$$
 
 流动性利率：流动性利率是贷款人提供贷款应获利息的利率，资金来源于借款利率，用 $LR_c$表示。
 
@@ -137,7 +140,10 @@ PMM是主动做市商算法，来源于DODO协议。相比于传统的AMM，PMM�
 
 边际价格 $P$是当前状态下的瞬时价格，用来表示多少个quote token可以买一个base token。 $B_0$表示做市商的base token总充值， $Q_0$表示做市商的quote token总充值。B表示当前资产池的base token总数量，Q表示当前资产池的quote token总数量。 $i$是由预言机提供的市价， $k$是一个在0到1范围内的参数。
 
-$$P=\begin{cases}i*(1-k+k*\frac{B_0^2}{B^2}),B<B_0\\\\\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})},Q<Q_0\end{cases}$$
+$$P=\begin{cases}
+i*(1-k+k*\frac{B_0^2}{B^2})\,B\lt B_0\\
+\frac{i}{(1-k+k*\frac{Q_0^2}{Q^2})}\,Q\lt Q_0\\
+\end{cases}$$
 
 
 从边际价格公式可以看出，k为0时，边际价格恒等于预言机提供的市价，无滑点，资金利用率高。k为1时，退化为传统的AMM，必须按照当前价格比例同时冲提两种资产，滑点高，资金利用率低。当池子中的资产数量 $B$和$Q$偏离 $B_0$和 $Q_0$时，会导致当前价格高于和低于外部价格，促使套利者套利，使得 $B$和 $Q$回归目标数量 $B_0$和 $Q_0$。值得注意的是，当系统处于不平衡状态时，预言机的价格变化会带来盈利或亏损。如当base token短缺且预言机价格base token上涨，多余的quote token价值低于base token回归到平衡状态的价值，做市商就会出现亏损。因此对于边际价格波动大的base token和quote token，需要设置一个较大的k，减少做市商出现亏损的风险。
