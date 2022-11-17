@@ -47,7 +47,7 @@ Permissions management involves all permissions for the entire protocol. Permiss
 
 ## 2.2 Application layer
 
-### 2.2.1 Full-chain lending
+### 2.2.1 Omnichain lending
 
 The lending protocol, represented by Aave, provides the ability to lend to a few of the most liquid tokens. In a decentralized financial world, Aave offers the good features of no trust and no permission. While decentralized lending has proven to work well over time, there is a large unmet need for current lending protocols. aave only meets the ability to lend to the most liquid assets and needs to be further extended for other assets. aave is a single-chain model. Although cross-chain collateralized lending is achieved through a token bridge, it requires each public chain to deploy the Aave protocol, which is costly and complex for users to operate.
 
@@ -130,11 +130,11 @@ Soft Liquidation: In Aave and Compound, the liquidator's one-time liquidated deb
 
 To meet the demand for lending on long-tail assets, for long-tail assets users are allowed to lend in segregated mode. Unlike regular assets, where users must enter segregated mode, long-tail assets can only be used as collateral, can only be borrowed against stablecoin assets and have a debt cap. The debt cap allows for good control of risk, thus avoiding a sharp increase in bad debt due to price volatility of long-tail assets.
 
-Overall, the full-chain lending application builds on the proven practices of the Aave and Compuond protocols, while improving on their shortcomings. Compared with Aave and Compuond: for users, it enables one-click deposit on chain A and lending operation on chain B, reducing the learning cost for users. For the clearer, it reduces the clearing stale cost and reduces MEV. for the protocol, it improves the risk resistance.
+Overall, the omnichain lending application builds on the proven practices of the Aave and Compuond protocols, while improving on their shortcomings. Compared with Aave and Compuond: for users, it enables one-click deposit on chain A and lending operation on chain B, reducing the learning cost for users. For the clearer, it reduces the clearing stale cost and reduces MEV. for the protocol, it improves the risk resistance.
 
 ### 2.2.2 PMM
 
-PMM is the active market maker algorithm, derived from the DODO protocol. Compared to traditional AMM, PMM allows users to make unilateral withdrawals, which fits very well with the full-chain single-coin pool of our protocol. By building PMM on top of the full-chain single-coin pool to form a new Dex application, users will have lower slippage and market makers will have lower unearned losses. Inevitably, PMM introduces higher algorithmic complexity, but the algorithmic logic built on top of Sui will effectively reduce additional fee consumption. 
+PMM is the active market maker algorithm, derived from the DODO protocol. Compared to traditional AMM, PMM allows users to make unilateral withdrawals, which fits very well with the omnichain single-coin pool of our protocol. By building PMM on top of the omnichain single-coin pool to form a new Dex application, users will have lower slippage and market makers will have lower unearned losses. Inevitably, PMM introduces higher algorithmic complexity, but the algorithmic logic built on top of Sui will effectively reduce additional fee consumption. 
 
 **Marginal Price**
 
@@ -177,17 +177,17 @@ Peer-to-peer model is for the NFT listed on the platform, the borrower to set th
 
 The peer-to-peer pool model is where the borrower borrows from a pool and the lender deposits funds into the pool in advance to receive the proceeds. There are three main entities in the peer-to-peer pool model: the borrower, the platform and the lender, with the platform acting as a lending reservoir and as a counterparty to the borrower and the lender. As the borrower, the appropriate NFTs are bundled into a unique NFT through the platform as a single unit of collateral and unavailable for any interaction. The cryptocurrency is then lent from the lending pool based on the floor price of the underlying and the collateral ratio set by the platform; the lender earns interest by depositing the cryptocurrency into the lending pool to provide liquidity. Liquidation is triggered when the borrower's health factor falls below 1 due to a significant drop in the floor price of the underlying. The advantages of peer-to-peer pooling are time efficiency and risk diversification through pooling, while the disadvantages are that it is not conducive to low liquidity assets and long-tail assets, and also suffers from poor capital utilization.
 
-Omni Protocol will support both peer-to-peer model and peer-to-pool model for full-chain NFT lending. By fusing the advantages of both models, users will have more options to support long-tail assets while bringing higher time efficiency.
+DOLA Protocol will support both peer-to-peer model and peer-to-pool model for omnichain NFT lending. By fusing the advantages of both models, users will have more options to support long-tail assets while bringing higher time efficiency.
 
 ### 2.2.4 OmniSwap
 
 OmniSwap is a one-click cross-chain Swap by aggregating liquidity across public chains. OmniSwap brings users a better Swap experience by effectively combining Dex and token bridges from different public chains to find the best route. At present, OmniSwap is already online to support EVM public chain led by Ether and Aptos public chain, using Stargate and Wormhole token bridges to combine Dex of different public chains to achieve one-click Swap.
 
-The current OmniSwap is an effective improvement to the single-chain Swap. However, fusing OmniSwap into Omni Protocol can have higher capital efficiency. By using the Dex application built with PMM, most of the cross-chain Swap is done within the protocol, and the advantage of PMM algorithm can be effectively used to bring lower slippage and lower gas operating experience to users.
+The current OmniSwap is an effective improvement to the single-chain Swap. However, fusing OmniSwap into DOLA Protocol can have higher capital efficiency. By using the Dex application built with PMM, most of the cross-chain Swap is done within the protocol, and the advantage of PMM algorithm can be effectively used to bring lower slippage and lower gas operating experience to users.
 
 ### 2.2.5 Other Projects
 
-The Web3 world is always evolving and changing day by day. Financial and non-financial Web3 applications are popping up all over the place. Omni Protocol will leave enough room for expansion to meet the interfacing needs of these Web3 projects. By introducing these Web3 applications into Omni Protocol, project parties can effectively access the user and capital liquidity of each public chain and promote the development of Web3 projects. Users have more choices and discover more value and fun.
+The Web3 world is always evolving and changing day by day. Financial and non-financial Web3 applications are popping up all over the place. DOLA Protocol will leave enough room for expansion to meet the interfacing needs of these Web3 projects. By introducing these Web3 applications into DOLA Protocol, project parties can effectively access the user and capital liquidity of each public chain and promote the development of Web3 projects. Users have more choices and discover more value and fun.
 
 ## 2.3 Message Layer
 
