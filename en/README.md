@@ -8,7 +8,7 @@ DOLA protocol is a decentralized omnichain liquidity aggregation protocol with s
 
 Since the rise of Web3 smart contract programming, various public chains have emerged. From the initial Evm-based public chains represented by Ether to the current Move-based public chains represented by Sui and Aptos. This phenomenon has led to a considerable degree of fragmentation of liquidity. Currently, 55% of the liquidity is concentrated in Ether, while the rest is scattered in the rest of the public chains. The fragmented liquidity makes it difficult for users of different public chains to access new public chains. Users are required to find Dex for tokens of the new public chain and use token bridges to swap across chains. Different token bridges have different user interfaces that users need to learn, navigate, and use and are not cheap. Users who own assets on different public chains at the same time have difficulty in finding the right project to earn excess revenue.
 
-In order to solve the above problems, we propose Omni Protocol, where users with different public chain assets can provide liquidity to the protocol and easily earn higher excess returns. The emergence of new public chains, the easy scalability of Omni Protocol, provides time guarantee for the first access. Consistent user portal for better operational experience.
+In order to solve the above problems, we propose DOLA Protocol, where users with different public chain assets can provide liquidity to the protocol and easily earn higher excess returns. The emergence of new public chains, the easy scalability of DOLA Protocol, provides time guarantee for the first access. Consistent user portal for better operational experience.
 
 # **2 Protocol Architecture**
 
