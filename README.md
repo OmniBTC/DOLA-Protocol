@@ -1,6 +1,6 @@
 
 
-# DOALP（Decentralized omnichain aggregation liquidity protocol）
+# DOALP(Decentralized omnichain aggregation liquidity protocol)
 
 DOALP is a decentralized omnichain aggregation liquidity protocol with the single coin pool of each public chain as the core, Wormhole, Layerzero and other cross-chain messaging protocols as the bridge, and Sui public chain as the settlement center.
 
