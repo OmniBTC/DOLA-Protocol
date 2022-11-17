@@ -184,11 +184,11 @@ Omni Protocol将同时支持点对点模型和点对池模型实现全链NFT借�
 
 OmniSwap是通过聚合各公链流动性，实现一键跨链Swap。OmniSwap通过将不同的公链的Dex和代币桥进行有效组合，寻找最佳路由，为用户带来更优秀的Swap体验。目前，OmniSwap已经上线支持以以太坊为首的EVM公链和Aptos公链，利用Stargate和Wormhole代币桥，组合不同公链的Dex实现一键Swap。
 
-当前的OmniSwap是对单链Swap的有效改进。然而，将OmniSwap融合进Omni Protocol，可以拥有更高的资金效率。通过利用PMM构建的Dex应用，使大部分的跨链Swap得以在协议内完成，并且可以有效利用PMM算法的优势，为用户带来更低滑点，更低gas的操作体验。
+当前的OmniSwap是对单链Swap的有效改进。然而，将OmniSwap融合进DOLA Protocol，可以拥有更高的资金效率。通过利用PMM构建的Dex应用，使大部分的跨链Swap得以在协议内完成，并且可以有效利用PMM算法的优势，为用户带来更低滑点，更低gas的操作体验。
 
 ### 2.2.5 其他项目
 
-Web3世界一直在不断的发展，日新月异。金融和非金融的Web3应用层出不穷。Omni Protocol将留下足够的扩展空间，满足这些Web3项目的对接需求。将这些Web3应用引入Omni Protocol协议，项目方可以有效获取各公链的用户和资金流动性，促进Web3项目的发展。用户拥有更多的选择，发现更多的价值和乐趣。
+Web3世界一直在不断的发展，日新月异。金融和非金融的Web3应用层出不穷。DOLA Protocol将留下足够的扩展空间，满足这些Web3项目的对接需求。将这些Web3应用引入DOLA Protocol协议，项目方可以有效获取各公链的用户和资金流动性，促进Web3项目的发展。用户拥有更多的选择，发现更多的价值和乐趣。
 
 ## 2.3 消息层
 
