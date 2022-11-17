@@ -225,7 +225,7 @@ The protocol core is divided into 3 parts, which are message processing, applica
 
 ![](https://fastly.jsdelivr.net/gh/hacpy/PictureBed@master/Document/1668049436740OmniPool-Architecture-%E7%AC%AC%204%20%E9%A1%B5.drawio.png)
 
-# 4 **Looking Ahead**
+# 4 **Outlook**
 
 The Chainwide Liquidity Protocol is an extensible protocol designed to aggregate liquidity from all chains and make it available to applications. Applications can use liquidity from any chain through the protocol. For developers, building applications on the upper layer of the protocol allows developers to spend more energy on application innovation and no longer need to focus on the chain and the lack of liquidity, which greatly reduces the threshold for developers and gives more opportunities for individual developers; for liquidity providers who want to earn coins, they have a unified portal for providing liquidity and no longer need to go to learn for each application, which greatly reduces This greatly reduces the learning cost for users and lowers the threshold for adding liquidity. For users, they have a chain-wide future because protocol-based applications are chain-wide and can be used to interact with applications on any chain without the need to exchange tokens on a chain to be able to use applications on that chain. I believe that the future of Web3 users must not be difficult to use Web3 applications, only need to be on an application should be able to operate most of the DeFi applications, and eventually do Web2 users are Web3 users. The future of the omnichain mobility protocol is the core of Web3, where most of Web3's money and applications are gathered, and is the foundation of the Web3 financial system.
 
