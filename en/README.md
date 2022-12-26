@@ -68,7 +68,7 @@ BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\geq U_{o
 
 Liquidity Rate: The liquidity rate is the interest rate at which a lender should receive interest for providing a loan, funded by the borrowing rate, expressed as $LR_c$.
 
-$$LR_c=BR_c*U_c*(1-RF)$$
+$$LR_c=BR_c * U_c * (1-RF)$$
 
 Cumulative Debit Index: indicates the cumulative index of interest payable by the borrower as time accumulates. $\Delta{T}$ represents the interval between the current time and the last update, and $T_{year}$ represents the time of a year in seconds.
 
@@ -151,15 +151,15 @@ As can be seen from the marginal price formula, when k is 0, the marginal price 
 
 The average price P is obtained by integrating the marginal price with the following formula, which gives the number of tokens a trader needs to pay to buy or sell a certain number of base tokens and quote tokens.
 
-$$P=\frac{Q_1-Q_2}{B_2-B_1}=i*(1-k+k*\frac{B_0^2}{B_1*B_2})=\frac{i}{1-k+k*\frac{Q_0^2}{Q_1*Q_2}}$$
+$$P=\frac{Q_1-Q_2}{B_2-B_1}=i * (1-k+k * \frac{B_0^2}{B_1 * B_2})=\frac{i}{1-k+k * \frac{Q_0^2}{Q_1 * Q_2}}$$
 
 **Regression target**
 
 $B_0$ and $Q_0$ are the regression targets, and substituting $B_0$ and $Q_0$ into the average price equation and solving the quadratic equation yields
 
-$$B_0=B_1+B_1*\frac{\sqrt{1+\frac{4*k*\Delta{Q}}{B_1^2*i}}-1}{2*k}$$
+$$B_0=B_1+B_1 * \frac{\sqrt{1+\frac{4 * k * \Delta{Q}}{B_1^2 * i}}-1}{2 * k}$$
 
-$$Q_0=Q_1+Q_1*\frac{\sqrt{1+\frac{4*k*\Delta{B}*i}{Q_1^2}}-1}{2*k}$$
+$$Q_0=Q_1+Q_1 * \frac{\sqrt{1+\frac{4 * k * \Delta{B} * i}{Q_1^2}}-1}{2 * k}$$
 
 Market makers top up base token when $B_1$ rises b and $B_0$ rises even more, so once a market maker fills up, it will cause all market makers to make a profit and the protocol will provide a top up to reward the market maker, the reward is mainly paid by the trader who made the system deviate from equilibrium. Conversely, a withdrawal by a market maker will cause all market makers to suffer a loss, and therefore a fee will be paid for the withdrawal. The handling fee is equal to the sum of the losses of the market makers caused by this withdrawal and is distributed to the market makers who have not yet withdrawn their money.
 
