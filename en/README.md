@@ -116,15 +116,74 @@ $$dT_t=SdT_t*BL_t$$
 
 Liquidation is when the value of a user's liabilities and collateral are less than the agreed upon over-collateralization requirements, and the user's collateral is liquidated to pay off the user's liabilities.
 
-Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debts due to a decrease in the value of the user's collateral. The agreement also takes into account the risk associated with an increase in the value of the liability, which is offset by a $BF$(greater than 1) increase in the value of the liability. $CF$(less than 1) is used to reduce the value of the collateral. When the user's collateral value $TotalCollateral$ and liability value $TotalDebt$ do not satisfy the following formula, they will be liquidated.
+Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debts due to a decrease in the value of the user's collateral. The agreement also takes into account the risk associated with an increase in the value of the liability, which is offset by a $BF$(greater than 1) increase in the value of the liability. $CF$(less than 1) is used to reduce the value of the collateral. $VC_i$ is used to represent the value of a collateral $i$, and $VD_i$ is used to represent the value of a debt $i$. When the user's collateral value $TotalCollateral$ and liability value $TotalDebt$ do not satisfy the following formula, they will be liquidated.
 
-$$TotalCollateral*CF>=TotalDebt*BF$$
+$$
+TD = \sum_{i}{VD_i}*{BF_i}
+$$
+
+$$
+TC = \sum_{i}{VC_i}*{CF_i}
+$$
+
+$$
+TC>TD
+$$
+
+$$
+HF = \frac{TC}{TD}
+$$
 
 Resistance to MEV: In Aave and Compound, the incentive for liquidation is to offer the borrower's collateral to the liquidator at a fixed percentage discount, usually between 5% and 10%. Liquidators are profitable, but not resistant to MEV because miners and front runners can steal transactions from the liquidators. To limit this form of MEV, the protocol allows liquidity providers to qualify for discounts, miners and others do not.
 
 Clearing costs: In Aave and Compound, clearing typically requires the use of external liquidity to process. The determination of this approach results in the liquidator not being able to liquidate at the desired price. Reasons for this include slippage, price fluctuations, fees, etc. The protocol's full-chain single coin pool allows clearing to allow clearing through lightning credits. The liquidator only needs to pay the Gas cost.
 
 Soft Liquidation: In Aave and Compound, the liquidator's one-time liquidated debt is fixed, currently at 0.5, meaning that the liquidator is allowed to liquidate half of the debt at one time. The disadvantage of this approach is that it is excessive and unfair to liquidate half of the debt if a smaller liquidation would restore the debt to health. Therefore, this agreement will use a soft liquidation model that allows no more debt to be liquidated at a time than is necessary to restore the defaulters to health (plus an additional safety margin). This means that less than half of the debt will be liquidated for borrowers in minor default and more than half for borrowers in serious default.
+
+
+Liquidation Discount: The base discount $BDC$ is the liquidator's base discount, the actual discount $DC$ is the liquidator's actual liquidation discount, the maximum discount MDC is the most possible discount, and the Treasury discount $TDC$ is the discount reserved to the Treasury. $AL$ represents average user liquidity, $\Delta T$ represents the time between the current time and the last update, and $DAY$ represents the time of day. $Min$ is used to get a smaller value.
+
+$$
+AL = \begin{cases} AL*\frac{DAY-\Delta{T}}{DAY} + (TC -TD) \ \ \ \ \Delta{T}<DAY \\ \\ TC -TD\ \ \Delta{T}>=DAY\end{cases}
+$$
+
+$$
+BDC = 1 - \frac{TC}{TD}
+$$
+
+$$
+DC = (Min(\frac{AL}{TD*5}, 1) + 1)*BDC + TDC
+$$
+
+$$
+DC = Min(DC, MDC)
+$$
+
+Number of liquidation: Target health factor $TH$ represents the health factor expected to be reached at the end of liquidation. $TC$ represents the total value of the current collateral and $TD$ represents the total value of the current liabilities. $PC_i$ represents the current collateral $i$ price, and $PD_i$ represents the current liability $i$ price. $LC_i$ is used to represent the maximum liquidation value of collateral $i$ , and $LD_i$ is used to represent the maximum liquidation value of liability $i$ . $TCL_i$ represents the maximum amount of collateral $i$ actually liquidated, and $TDL_i$ represents the maximum amount of liabilities $i$ actually liquidated. $TCU_i$ represents the maximum amount of collateral $i$ available to the user, and $TDT_i$ represents the amount of collateral $i$ reserved for the Treasury
+
+$$
+LC_i = \frac{TD*TH-TC}{TH*(1-DC)*BF_i-CF_i}
+$$
+
+$$
+LD_i = \frac{(TD*TH-TC)*(1-DC)}{TH*(1-DC)*BF_i-CF_i}
+$$
+
+$$
+TCL_i = \frac{LC_i}{PC_i}
+$$
+
+$$
+TDL_i = \frac{LD_i}{PD_i}
+$$
+
+$$
+TCU_i = TCL_i * (1-TDC)
+$$
+
+$$
+TCT_i = TCL_i * TDC
+$$
 
 **Asset Segregation**
 
