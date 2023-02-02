@@ -116,7 +116,7 @@ $$dT_t=SdT_t*BL_t$$
 
 Liquidation is when the value of a user's liabilities and collateral are less than the agreed upon over-collateralization requirements, and the user's collateral is liquidated to pay off the user's liabilities.
 
-Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debt due to a decrease in the value of the user's collateral. The protocol also considers the risk associated with an increase in the value of the liabilities, which is offset by $BF$(greater than 1) to increase the value of the liabilities. $CF$(less than 1) is used to reduce the value of the collateral. $VC_i$ is used to denote the value of collateral i and $VD_i$ is used to denote the value of liability i. When the user's total collateral value $TC$ and total liability value $TD$ do not satisfy the following formula, they are liquidated.
+Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debt due to a decrease in the value of the user's collateral. The protocol also considers the risk associated with an increase in the value of the liabilities, which is offset by $BF$(greater than 1) to increase the value of the liabilities. $CF$ (less than 1) is used to reduce the value of the collateral. $VC_i$ is used to denote the value of collateral i and $VD_i$ is used to denote the value of liability i. When the user's total collateral value $TC$ and total liability value $TD$ do not satisfy the following formula, they are liquidated.
 
 $$
 TD = \sum_{i}{VD_i}*{BF_i}
@@ -140,8 +140,8 @@ Liquidation Discount: Base Discount $BDC$ is the liquidator's base discount, Act
 
 $$AL = \begin{cases}
 AL * \frac{DAY-\Delta{T}}{DAY} + (TC -TD)\,\Delta{T}\lt DAY \\
-TC - TD, \Delta{T}\geq DAY\
-end{cases}$$
+TC - TD, \Delta{T}\geq DAY\\
+\end{cases}$$
 
 $$
 BDC = 1 - \frac{TC}{TD}
