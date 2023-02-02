@@ -138,9 +138,10 @@ Soft Liquidation: In traditional lending, the liquidator liquidates a fixed amou
 
 Liquidation Discount: Base Discount $BDC$ is the liquidator's base discount, Actual Discount $DC$ is the liquidator's actual liquidation discount, Maximum Discount $MDC$ is the maximum possible discount, and Treasury Discount $TDC$ is the discount reserved for the Treasury. $AL$ represents the average user liquidity, $\Delta T$ represents the interval between the current time and the last update, and $DAY$ represents the time of day. $Min$ is used to take the smaller value. The protocol grants a liquidation discount based on the liquidity contributed by the liquidator to the agreement.
 
-$$
-AL = \begin{cases} AL*\frac{DAY-\Delta{T}}{DAY} + (TC -TD) \ \ \ \ \Delta{T}<DAY \\ \\ TC -TD\ \ \Delta{T}>=DAY\end{cases}
-$$
+$$AL = \begin{cases}
+AL * \frac{DAY-\Delta{T}}{DAY} + (TC -TD)\,\Delta{T}\lt DAY \\
+TC - TD, \Delta{T}\geq DAY\
+end{cases}$$
 
 $$
 BDC = 1 - \frac{TC}{TD}
@@ -157,11 +158,11 @@ $$
 Liquidation Quantity: The Target Health Factor $TH$ represents the health factor expected to be achieved at the end of liquidation. $TC$ represents the total current collateral value, $TD$ represents the total current liability value. $PC_i$ represents the current collateral i price and $PD_i$ represents the current liability $i$ price. $LC_i$ is used to represent the maximum liquidation value of collateral i and $LD_i$ is used to represent the maximum liquidation value of liability $i$. $TCL_i$ represents the maximum number of collateral $i$ actually liquidated and $TDL_i$ represents the maximum number of liability i actually liquidated. $TCU_i$ represents the maximum amount of collateral $i$ available to the user, and $TDT_i$ represents the amount of collateral $i$ reserved for the treasury
 
 $$
-LC_i = \frac{TD*TH-TC}{TH*(1-DC)*BF_i-CF_i}
+LC_i = \frac{TD * TH-TC}{TH * (1-DC) * BF_i-CF_i}
 $$
 
 $$
-LD_i = \frac{(TD*TH-TC)*(1-DC)}{TH*(1-DC)*BF_i-CF_i}
+LD_i = \frac{(TD * TH-TC) * (1-DC)}{TH * (1-DC) * BF_i-CF_i}
 $$
 
 $$
