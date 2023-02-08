@@ -38,21 +38,25 @@ Sui Clearing House's Pool Manager is a unified manager of single coin pools on d
 Since providers such as USDC exist on multiple chains, the protocol will have USDC single coin pools on different chains. In order to avoid the depletion of the USDC single coin pool of a particular chain, the protocol utilizes a dynamic balancing algorithm to avoid the depletion of single chain liquidity. The purpose of the dynamic balancing algorithm is to maintain a desired distribution ratio for different chains. Suppose the a-chain USDC we expect a proportional distribution of $EP_a$, the current liquidity of a-chain USDC is $CA_a$, the current total USDC liquidity is $CTA_a$, the current number of withdrawals is $n$, and the proportion of USDC on a-chain after withdrawals is $\frac{CA_a-n}{CTA_a-n}$. The dynamic balancing rate $\lambda$ is defined as
 
 $$\lambda=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
-\frac{\lambda_1}{\alpha_1}*(\alpha_1-\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+\frac{\lambda_1}{\alpha_1} * (\alpha_1-\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}$$
 
-为了满足在a链上连续提取USDC，提现USDC总和不变，提现手续费不变的良好特性。对动态平衡费率微积分，得出收取费用，收取的费用为了减少复杂性，按照回到$EP_a$等比例分配给流动性补充者
+In order to meet the good characteristics of continuous withdrawal of USDC on the a-chain, the sum of withdrawal USDC remains unchanged, and the withdrawal fee remains unchanged. Calculate the dynamic balance rate calculus, and get the fees charged. In order to reduce the complexity, the fees charged will be allocated to the liquidity replenishers in proportion to $EP_a$
 
-$$n_{start}=\begin{cases}
-0,\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\le\alpha_1\\
-\frac{CA_a-CTA_a*\alpha_1*EP_a}{1-\alpha_1*EP_a},\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\gt\alpha_1
-\end{cases}$$
+$$
+n_{start}=\begin{cases}
+0,\frac{CA_a}{CTA_a} * \frac{1}{EP_a}\le\alpha_1\\
+\frac{CA_a-CTA_a * \alpha_1 * EP_a}{1-\alpha_1 * EP_a},\frac{CA_a}{CTA_a} * \frac{1}{EP_a}\gt\alpha_1
+\end{cases}
+$$
 
-$$fee=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
-\lambda_1*(n-n_{start})+\frac{\lambda_1}{\alpha_1*EP_a}*((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
-\end{cases}$$
+$$
+fee=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+\lambda_1 * (n-n_{start})+\frac{\lambda_1}{\alpha_1 * EP_a} * ((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
+\end{cases}
+$$
 
 
 
@@ -153,14 +157,12 @@ TD = \sum_{i}{debt\\_amount_i} * {price_i} * {BF_i}
 $$
 
 $$
-HF = \frac{TC}{TD} > 1
+HF = \frac{TC}{TD}
 $$
 
-Resistance to MEV: In Aave and Compound, the incentive for liquidation is to offer the borrower's collateral to the liquidator at a fixed percentage discount, usually between 5% and 10%. Liquidators are profitable, but not resistant to MEV because miners and front runners can steal transactions from the liquidators. To limit this form of MEV, the protocol allows liquidity providers to qualify for discounts, miners and others do not.
+Liquidation cost: The process of liquidation is that the liquidator buys debt assets from the outside, and the liquidator obtains collateral of equivalent value at a certain discount. Liquidators need to bear certain price fluctuation risks. In order to solve this problem, on the one hand, the agreement encourages those who contribute a lot to the agreement's liquidity to act as liquidators, and will have a higher discount. On the other hand, a special liquidation pool can be established. When liquidation occurs, the liquidation pool can be directly used for liquidation, and the liquidation pool can be used to share the risk of price fluctuations.
 
-Clearing Costs: In Aave and Compound, clearing typically requires the use of external liquidity to process. The determination of this approach results in the liquidator not being able to liquidate at the desired price. Reasons for this include slippage, price fluctuations, fees, etc. The protocol's full-chain single coin pool allows clearing to allow clearing through lightning credits. The liquidator only needs to pay the Gas cost.
-
-Liquidation Discount: Base Discount $BDC$ is the liquidator's base discount, Actual Discount $DC$ is the liquidator's actual liquidation discount, Maximum Discount $MDC$ is the maximum possible discount, and Treasury Discount $TDC$ is the discount reserved for the Treasury. $AL$ represents the average user liquidity, $\Delta T$ represents the interval between the current time and the last update, and $DAY$ represents the time of day. $Min$ is used to take the smaller value. The protocol grants a liquidation discount based on the liquidity contributed by the liquidator to the agreement.
+Liquidation Discount: Base Discount $BDC$ is the liquidator's base discount, Actual Discount $DC$ is the liquidator's actual liquidation discount, Maximum Discount $MDC$ is the maximum possible discount, and Treasury Discount $TDC$ is the discount reserved for the Treasury. $AL$ represents the average user liquidity, $\Delta T$ represents the interval between the current time and the last update, and $DAY$ represents the time of day. $Min$ is used to take the smaller value. The protocol grants a liquidation discount based on the liquidity contributed by the liquidator to the agreement. Different people have different discounts, which alleviates the occurrence of MEV to a certain extent. People with high discounts can initiate liquidation in advance to obtain liquidation rewards.
 
 $$AL = \begin{cases}
 AL * \frac{DAY-\Delta{T}}{DAY} + (TC -TD)\,\Delta{T}\lt DAY \\
