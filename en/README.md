@@ -112,18 +112,23 @@ $$SdT_t=SdT_{t-1}-\frac{m}{BL_{t}}$$
 
 $$dT_t=SdT_t*BL_t$$
 
+**Oracle price**
+
+We will use suppliers such as Pyth to provide on-chain price, and the price they provide is the average $price$ over a period of time.
+
 **Liquidation**
 
 Liquidation is when the value of a user's liabilities and collateral are less than the agreed upon over-collateralization requirements, and the user's collateral is liquidated to pay off the user's liabilities.
 
-Risk Adjustment: Unlike traditional lending, which only considers the risk of bad debt due to a decrease in the value of the user's collateral. The protocol also considers the risk associated with an increase in the value of the liabilities, which is offset by $BF$(greater than 1) to increase the value of the liabilities. $CF$ (less than 1) is used to reduce the value of the collateral. $VC_i$ is used to denote the value of collateral i and $VD_i$ is used to denote the value of liability i. When the user's total collateral value $TC$ and total liability value $TD$ do not satisfy the following formula, they are liquidated.
+
+Health Factor: Different from aave, it only considers the risk of bad debts caused by the decrease of the value of the user's collateral. The agreement also considers the risk caused by the rise in the value of liabilities, which can be resisted by increasing the value of liabilities by $BF$ (greater than 1). $CF$ (less than 1) is used to reduce the value of the collateral. When the health factor $HF$ composed by the total value of the collateral $TC$ and the total value of the liabilities $TD$ is less than 1, the user will be liquidated.
 
 $$
-TD = \sum_{i}{VD_i}*{BF_i}
+TC = \sum_{i}{collateral\\_amount_i} * {price_i} * {CF_i}
 $$
 
 $$
-TC = \sum_{i}{VC_i}*{CF_i}
+TD = \sum_{i}{debt\\_amount_i} * {price_i} * {BF_i}
 $$
 
 $$
@@ -132,9 +137,7 @@ $$
 
 Resistance to MEV: In Aave and Compound, the incentive for liquidation is to offer the borrower's collateral to the liquidator at a fixed percentage discount, usually between 5% and 10%. Liquidators are profitable, but not resistant to MEV because miners and front runners can steal transactions from the liquidators. To limit this form of MEV, the protocol allows liquidity providers to qualify for discounts, miners and others do not.
 
-Clearing costs: In Aave and Compound, clearing typically requires the use of external liquidity to process. The determination of this approach results in the liquidator not being able to liquidate at the desired price. Reasons for this include slippage, price fluctuations, fees, etc. The protocol's full-chain single coin pool allows clearing to allow clearing through lightning credits. The liquidator only needs to pay the Gas cost.
-
-Soft Liquidation: In traditional lending, the liquidator liquidates a fixed amount of debt at one time, currently 0.5, meaning that the liquidator allows the liquidator to liquidate half of the debt at one time. The disadvantage of this approach is that it is excessive and unfair to liquidate half of the debt if a smaller liquidation would restore the debt to health. Therefore, this agreement will use a soft liquidation model that allows liquidation of no more debt at a time than is necessary to restore the defaulters to their target health factor (plus an additional safety factor). This means that less than half of the debt will be liquidated for borrowers in minor default and more than half for borrowers in serious default.
+Clearing Costs: In Aave and Compound, clearing typically requires the use of external liquidity to process. The determination of this approach results in the liquidator not being able to liquidate at the desired price. Reasons for this include slippage, price fluctuations, fees, etc. The protocol's full-chain single coin pool allows clearing to allow clearing through lightning credits. The liquidator only needs to pay the Gas cost.
 
 Liquidation Discount: Base Discount $BDC$ is the liquidator's base discount, Actual Discount $DC$ is the liquidator's actual liquidation discount, Maximum Discount $MDC$ is the maximum possible discount, and Treasury Discount $TDC$ is the discount reserved for the Treasury. $AL$ represents the average user liquidity, $\Delta T$ represents the interval between the current time and the last update, and $DAY$ represents the time of day. $Min$ is used to take the smaller value. The protocol grants a liquidation discount based on the liquidity contributed by the liquidator to the agreement.
 
@@ -155,33 +158,30 @@ $$
 DC = Min(DC, MDC)
 $$
 
-Liquidation Quantity: The Target Health Factor $TH$ represents the health factor expected to be achieved at the end of liquidation. $TC$ represents the total current collateral value, $TD$ represents the total current liability value. $PC_i$ represents the current collateral i price and $PD_i$ represents the current liability $i$ price. $LC_i$ is used to represent the maximum liquidation value of collateral i and $LD_i$ is used to represent the maximum liquidation value of liability $i$. $TCL_i$ represents the maximum number of collateral $i$ actually liquidated and $TDL_i$ represents the maximum number of liability i actually liquidated. $TCU_i$ represents the maximum amount of collateral $i$ available to the user, and $TDT_i$ represents the amount of collateral $i$ reserved for the treasury
+Soft Liquidation: In aave, the debt liquidated by the liquidator in one lump sum is fixed, currently 0.5, that is, the liquidator allows the liquidator to settle half of the debt in one lump sum. The disadvantage of this approach is that it is excessive and unfair to liquidate half the debt if a smaller liquidation can restore it to health. We use soft liquidation, and the maximum amount of liquidation depends on the solution of the following equation. Where, the target health factor $TH$ represents the health factor expected to be reached at the end of liquidation. Now let's say we want to liquidate the collateral $i$ and the liability $j$ . $LC_i$ represents the maximum amount of liquidation of collateral $i$ , and $LD_i$ represents the maximum amount of liquidation of liabilities $i$ .
+
+
+Equation:
 
 $$
-LC_i = \frac{TD * TH-TC}{TH * (1-DC) * BF_i-CF_i}
-$$
-
-$$
-LD_i = \frac{(TD * TH-TC) * (1-DC)}{TH * (1-DC) * BF_i-CF_i}
-$$
-
-$$
-TCL_i = \frac{LC_i}{PC_i}
+\frac{TC-LC_i * price_i * CF_i}{TD-LD_j * price_j * BF_j} = TH
 $$
 
 $$
-TDL_i = \frac{LD_i}{PD_i}
+LC_i * price_i * (1-DC) = LD_j * price_j
+$$
+
+Solve：
+
+$$
+LC_i = \frac{TD * TH-TC}{TH * (1-DC) * BF_j-CF_i} * \frac{1}{price_i}
 $$
 
 $$
-TCU_i = TCL_i * (1-TDC)
+LD_j = \frac{TD * TH-TC}{TH * (1-DC) * BF_j-CF_i} * \frac{1-DC}{price_j}
 $$
 
-$$
-TCT_i = TCL_i * TDC
-$$
-
-Liquidation process: After obtaining the maximum liquidatable collateral and liabilities through the formula, the liquidator can get the corresponding collateral at a certain discount by paying the liabilities.
+To solve $LC_i$ and $LD_j$ , when $LC_i$ or $LD_j$ is greater than the amount of existing collateral or liabilities, it can be reduced in equal proportion.
 
 **Asset Segregation**
 
