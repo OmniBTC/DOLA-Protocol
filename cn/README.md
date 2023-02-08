@@ -35,6 +35,27 @@ DOLA Protocol是以各公链的单币池为核心，以Wormhole, Layerzero等跨
 
 Sui结算中心的单币池管理器是不同链上单币池的统一管理者，负责单币池的资产分类，资产流动性管理等。通过单币池管理器可以全局透视不同链上单币池的资产分布。单币池管理器拥有一个动态跨链费算法，通过不同链上的可用流动性和期望流动性，激励单币池流行性自动再平衡。如果单币池的可用流动性低于期望流动性，跨链费用变高。如果单币池的可用流动性高于期望流动性，跨链费用变低。
 
+由于USDC等供应商存在于多条链，因此协议中会在不同的链上存在USDC单币池。为了避免某条链USDC单币池的枯竭，协议利用动态平衡算法，避免单链流动性的枯竭。动态平衡算法目的是使不同链维持一个期望分布比例。假设a链USDC我们期望的比例分布为 $EP_a$ ，a链USDC当前流动性为 $CA_a$ ，USDC 当前总流动为 $CTA_a$ ，当前提现数量为 $n$ ，提现之后USDC在a链上的比例为 $\frac{CA_a-n}{CTA_a-n}$ 。动态平衡费率$\lambda$的定义为：
+
+$$\lambda=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
+\frac{\lambda_1}{\alpha_1}*(\alpha_1-\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+\end{cases}$$
+
+为了满足在a链上连续提取USDC，提现USDC总和不变，提现手续费不变的良好特性。对动态平衡费率微积分，得出收取费用，收取的费用为了减少复杂性，按照回到$EP_a$等比例分配给流动性补充者
+
+$$n_{start}=\begin{cases}
+0,\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\le\alpha_1\\
+\frac{CA_a-CTA_a*\alpha_1*EP_a}{1-\alpha_1*EP_a},\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\gt\alpha_1
+\end{cases}$$
+
+$$fee=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
+\lambda_1*(n-n_{start})+\frac{\lambda_1}{\alpha_1*EP_a}*((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+\end{cases}$$
+
+
+
 ### 2.1.4 应用管理器(AppManage)
 
 Sui结算中心的应用管理器负责管理协议支持的应用。DOLA Protocol引入新应用，需要通过应用管理器获取权限并分配应用ID。协议中的每一个应用拥有唯一ID。用户可以通过应用ID自主选择想要使用的应用，为协议提供流动性，也可以根据协议推荐算法进行自动选择，让用户拥有较低的学习成本和良好的用户体验。应用管理器负责应用的冻结和下架，用于应对紧急情况。应用管理器负责制定或更新不同公链应用层接口使用的消息库。

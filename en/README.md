@@ -35,6 +35,27 @@ The bridge is an adapter for different cross-chain messaging protocols. In order
 
 Sui Clearing House's Pool Manager is a unified manager of single coin pools on different chains, responsible for asset classification and asset liquidity management of single coin pools. The Pool Manager provides a global view of the asset distribution of the pools on different chains. The Single Coin Pool Manager has a dynamic cross-chain fee algorithm that incentivizes the automatic rebalancing of single coin pool popularity by the available and desired liquidity on different chains. If the available liquidity of a single coin pool is lower than the desired liquidity, the cross-chain fee becomes higher. If the available liquidity of a single coin pool is higher than the desired liquidity, the cross-chain fee becomes lower.
 
+Since providers such as USDC exist on multiple chains, the protocol will have USDC single coin pools on different chains. In order to avoid the depletion of the USDC single coin pool of a particular chain, the protocol utilizes a dynamic balancing algorithm to avoid the depletion of single chain liquidity. The purpose of the dynamic balancing algorithm is to maintain a desired distribution ratio for different chains. Suppose the a-chain USDC we expect a proportional distribution of $EP_a$, the current liquidity of a-chain USDC is $CA_a$, the current total USDC liquidity is $CTA_a$, the current number of withdrawals is $n$, and the proportion of USDC on a-chain after withdrawals is $\frac{CA_a-n}{CTA_a-n}$. The dynamic balancing rate $\lambda$ is defined as
+
+$$\lambda=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
+\frac{\lambda_1}{\alpha_1}*(\alpha_1-\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+\end{cases}$$
+
+为了满足在a链上连续提取USDC，提现USDC总和不变，提现手续费不变的良好特性。对动态平衡费率微积分，得出收取费用，收取的费用为了减少复杂性，按照回到$EP_a$等比例分配给流动性补充者
+
+$$n_{start}=\begin{cases}
+0,\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\le\alpha_1\\
+\frac{CA_a-CTA_a*\alpha_1*EP_a}{1-\alpha_1*EP_a},\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\gt\alpha_1
+\end{cases}$$
+
+$$fee=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
+\lambda_1*(n-n_{start})+\frac{\lambda_1}{\alpha_1*EP_a}*((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+\end{cases}$$
+
+
+
 ### 2.1.4 AppManage
 
 The application manager of Sui Clearing House is responsible for managing the applications supported by the protocol.When Omni Protocol introduces a new application, it needs to obtain permission and assign an application ID through the application manager.Each application in the protocol has a unique ID.Users can select the application they want to use by the application ID to provide liquidity to the protocol, or they can select it automatically based on the protocol recommendation algorithm, allowing Users have low learning cost and good user experience. The application manager is responsible for freezing and taking down applications for emergency situations. The Application Manager is responsible for developing or updating the message repository used by different public chain application layer interfaces.
