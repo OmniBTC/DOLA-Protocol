@@ -35,24 +35,28 @@ DOLA Protocol是以各公链的单币池为核心，以Wormhole, Layerzero等跨
 
 Sui结算中心的单币池管理器是不同链上单币池的统一管理者，负责单币池的资产分类，资产流动性管理等。通过单币池管理器可以全局透视不同链上单币池的资产分布。单币池管理器拥有一个动态跨链费算法，通过不同链上的可用流动性和期望流动性，激励单币池流行性自动再平衡。如果单币池的可用流动性低于期望流动性，跨链费用变高。如果单币池的可用流动性高于期望流动性，跨链费用变低。
 
-由于USDC等供应商存在于多条链，因此协议中会在不同的链上存在USDC单币池。为了避免某条链USDC单币池的枯竭，协议利用动态平衡算法，避免单链流动性的枯竭。动态平衡算法目的是使不同链维持一个期望分布比例。假设a链USDC我们期望的比例分布为 $EP_a$ ，a链USDC当前流动性为 $CA_a$ ，USDC 当前总流动为 $CTA_a$ ，当前提现数量为 $n$ ，提现之后USDC在a链上的比例为 $\frac{CA_a-n}{CTA_a-n}$ 。动态平衡费率$\lambda$的定义为：
+由于USDC等供应商存在于多条链，因此协议中会在不同的链上存在USDC单币池。为了避免某条链USDC单币池的枯竭，协议利用动态平衡算法，避免单链流动性的枯竭。动态平衡算法目的是使不同链维持一个期望分布比例。假设a链USDC我们期望的比例分布为 $EP_a$ ，a链USDC当前流动性为 $CA_a$ ，USDC 当前总流动为 $CTA_a$ ，当前提现数量为 $n$ ，提现之后USDC在a链上的比例为 $\frac{CA_a-n}{CTA_a-n}$ 。动态平衡费率 $\lambda$ 的定义为：
 
 $$\lambda=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
-\frac{\lambda_1}{\alpha_1}*(\alpha_1-\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+\frac{\lambda_1}{\alpha_1} * (\alpha_1-\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}$$
 
-为了满足在a链上连续提取USDC，提现USDC总和不变，提现手续费不变的良好特性。对动态平衡费率微积分，得出收取费用，收取的费用为了减少复杂性，按照回到$EP_a$等比例分配给流动性补充者
+为了满足在a链上连续提取USDC，提现USDC总和不变，提现手续费不变的良好特性。对动态平衡费率微积分，得出收取费用，收取的费用为了减少复杂性，按照回到 $EP_a$ 等比例分配给流动性补充者
 
-$$n_{start}=\begin{cases}
-0,\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\le\alpha_1\\
-\frac{CA_a-CTA_a*\alpha_1*EP_a}{1-\alpha_1*EP_a},\frac{CA_a}{CTA_a}*\frac{1}{EP_a}\gt\alpha_1
-\end{cases}$$
+$$
+n_{start}=\begin{cases}
+0,\frac{CA_a}{CTA_a} * \frac{1}{EP_a}\le\alpha_1\\
+\frac{CA_a-CTA_a * \alpha_1 * EP_a}{1-\alpha_1 * EP_a},\frac{CA_a}{CTA_a} * \frac{1}{EP_a}\gt\alpha_1
+\end{cases}
+$$
 
-$$fee=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\gt\alpha_1\\
-\lambda_1*(n-n_{start})+\frac{\lambda_1}{\alpha_1*EP_a}*((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n}*\frac{1}{EP_a}\le\alpha_1
-\end{cases}$$
+$$
+fee=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+\lambda_1 * (n-n_{start})+\frac{\lambda_1}{\alpha_1 * EP_a} * ((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
+\end{cases}
+$$
 
 
 
@@ -152,14 +156,13 @@ TD = \sum_{i}{debt\\_amount_i} * {price_i} * {BF_i}
 $$
 
 $$
-HF = \frac{TC}{TD} > 1
+HF = \frac{TC}{TD} 
 $$
 
-抗MEV能力：在传统借贷中，清算的激励方式是将借款人的抵押品以固定百分比的折扣提供给清算人，通常在5%-10%之间。清算人是有利可图的，但是不抗MEV，因为矿工和跑在前面的人可以窃取清算人的交易。为了限制这种形式的MEV，协议允许流动性提供者有资格获取折扣，矿工和其他人没有折扣。
 
-清算成本：在传统借贷中，清算通常需要利用外部流动资金来处理。这种方式的确定导致清算人不能以理想的价格进行清算。造成这种情况的原因包括滑点，价格波动，手续费等。协议的全链单币池，允许清算允许通过闪电贷的进行清算。清算人仅仅需要支付Gas成本。
+清算成本：清算的过程是清算人从外部买入债务资产，以一定的折扣清算人获取等价值的抵押品。清算人需要承担一定的价格波动风险。为了解决这个问题，一方面协议鼓励在对协议流动性贡献大的人充当清算人，会拥有更高的折扣。另一方面可以建立专门的清算池子，清算发生时直接利用清算池进行清算，利用清算池来共担价格波动的风险。
 
-清算折扣: 基础折扣 $BDC$ 是清算人的基础折扣, 实际折扣 $DC$ 是清算人实际清算折扣，最大折扣 $MDC$ 是最大可能的折扣，国库折扣 $TDC$ 是保留给国库的折扣。 $AL$ 代表用户平均流动性， $\Delta T$ 代表当前时间到上一次更新的间隔时间,  $DAY$ 代表一天时间。 $Min$ 用于取较小值。协议根据清算人为协议贡献的流动性给予清算折扣。
+清算折扣: 基础折扣 $BDC$ 是清算人的基础折扣, 实际折扣 $DC$ 是清算人实际清算折扣，最大折扣 $MDC$ 是最大可能的折扣，国库折扣 $TDC$ 是保留给国库的折扣。 $AL$ 代表用户平均流动性， $\Delta T$ 代表当前时间到上一次更新的间隔时间,  $DAY$ 代表一天时间。 $Min$ 用于取较小值。协议根据清算人为协议贡献的流动性给予清算折扣。不同的人拥有不同的折扣，在一定程度上缓解了MEV的发生，折扣高的人可以提前发起清算获取清算奖励。
 
 $$AL = \begin{cases}
 AL * \frac{DAY-\Delta{T}}{DAY} + (TC -TD)\,\Delta{T}\lt DAY \\
