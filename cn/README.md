@@ -54,7 +54,7 @@ $$
 $$
 fee=\begin{cases}
 0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
-\lambda_1 * (n-n_{start})+\frac{\lambda_1}{\alpha_1 * EP_a} * ((CA_a-n)ln(CTA_a-n)-(CA_a-n_1)ln(CTA_a-n_1)),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
+\lambda_1 * (n-n_{start})+\frac{\lambda_1*ln2}{\alpha_1 * EP_a} * ((CA_a-n)log_2(CTA_a-n)-(CA_a-n_{start})log_2(CTA_a-n_{start})),\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}
 $$
 
