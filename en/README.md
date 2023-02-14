@@ -35,7 +35,7 @@ The bridge is an adapter for different cross-chain messaging protocols. In order
 
 Sui Clearing House's Pool Manager is a unified manager of single coin pools on different chains, responsible for asset classification and asset liquidity management of single coin pools. The Pool Manager provides a global view of the asset distribution of the pools on different chains. The Single Coin Pool Manager has a dynamic cross-chain fee algorithm that incentivizes the automatic rebalancing of single coin pool popularity by the available and desired liquidity on different chains. If the available liquidity of a single coin pool is lower than the desired liquidity, the cross-chain fee becomes higher. If the available liquidity of a single coin pool is higher than the desired liquidity, the cross-chain fee becomes lower.
 
-Since providers such as USDC exist on multiple chains, the protocol will have USDC single coin pools on different chains. In order to avoid the depletion of the USDC single coin pool of a particular chain, the protocol utilizes a dynamic balancing algorithm to avoid the depletion of single chain liquidity. The purpose of the dynamic balancing algorithm is to maintain a desired distribution ratio for different chains. Suppose the a-chain USDC we expect a proportional distribution of $EP_a$, the current liquidity of a-chain USDC is $CA_a$, the current total USDC liquidity is $CTA_a$, the current number of withdrawals is $n$, and the proportion of USDC on a-chain after withdrawals is $\frac{CA_a-n}{CTA_a-n}$. The dynamic balancing rate $\lambda$ is defined as
+Since providers such as USDC exist on multiple chains, the protocol will have USDC single coin pools on different chains. In order to avoid the depletion of the USDC single coin pool of a particular chain, the protocol utilizes a dynamic balancing algorithm to avoid the depletion of single chain liquidity. The purpose of the dynamic balancing algorithm is to maintain a desired distribution ratio for different chains. Suppose the a-chain USDC we expect a proportional distribution of $EP_a$, the current liquidity of a-chain USDC is $CA_a$, the current total USDC liquidity is $CTA_a$, the current number of withdrawals is $n$, and the proportion of USDC on a-chain after withdrawals is $\frac{CA_a-n}{CTA_a-n}$. The dynamic balancing rate $\lambda$ is defined as($\lambda_1$ is the maximum dynamic rate)
 
 $$\lambda=\begin{cases}
 0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
@@ -52,8 +52,8 @@ n_{start}=\begin{cases}
 $$
 
 $$
-fee=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+fee=\int_{n_{start}}^n\lambda=\begin{cases}
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\
 -\lambda_1*\frac{1 - \alpha_1 * EP_a}{\alpha_1 * EP_a} * (n-n_{start})+\frac{\lambda_1 * ln2 * (CTA_a - CA_a) }{\alpha_1 * EP_a} * log_2\frac{CTA_a-n_{start}}{CTA_a-n},\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}
 $$
