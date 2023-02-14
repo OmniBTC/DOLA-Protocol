@@ -35,7 +35,7 @@ DOLA Protocol是以各公链的单币池为核心，以Wormhole, Layerzero等跨
 
 Sui结算中心的单币池管理器是不同链上单币池的统一管理者，负责单币池的资产分类，资产流动性管理等。通过单币池管理器可以全局透视不同链上单币池的资产分布。单币池管理器拥有一个动态跨链费算法，通过不同链上的可用流动性和期望流动性，激励单币池流行性自动再平衡。如果单币池的可用流动性低于期望流动性，跨链费用变高。如果单币池的可用流动性高于期望流动性，跨链费用变低。
 
-由于USDC等供应商存在于多条链，因此协议中会在不同的链上存在USDC单币池。为了避免某条链USDC单币池的枯竭，协议利用动态平衡算法，避免单链流动性的枯竭。动态平衡算法目的是使不同链维持一个期望分布比例。假设a链USDC我们期望的比例分布为 $EP_a$ ，a链USDC当前流动性为 $CA_a$ ，USDC 当前总流动为 $CTA_a$ ，当前提现数量为 $n$ ，提现之后USDC在a链上的比例为 $\frac{CA_a-n}{CTA_a-n}$ 。动态平衡费率 $\lambda$ 的定义为：
+由于USDC等供应商存在于多条链，因此协议中会在不同的链上存在USDC单币池。为了避免某条链USDC单币池的枯竭，协议利用动态平衡算法，避免单链流动性的枯竭。动态平衡算法目的是使不同链维持一个期望分布比例。假设a链USDC我们期望的比例分布为 $EP_a$ ，a链USDC当前流动性为 $CA_a$ ，USDC 当前总流动为 $CTA_a$ ，当前提现数量为 $n$ ，提现之后USDC在a链上的比例为 $\frac{CA_a-n}{CTA_a-n}$ 。动态平衡费率 $\lambda$ 的定义为( $\lambda_1$ 为最大动态费率)：
 
 $$\lambda=\begin{cases}
 0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
@@ -52,7 +52,7 @@ n_{start}=\begin{cases}
 $$
 
 $$
-fee=\begin{cases}
+fee=\int_{n_{start}}^n\lambda=\begin{cases}
 0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
 -\lambda_1*\frac{1 - \alpha_1 * EP_a}{\alpha_1 * EP_a} * (n-n_{start})+\frac{\lambda_1 * ln2 * (CTA_a - CA_a) }{\alpha_1 * EP_a} * log_2\frac{CTA_a-n_{start}}{CTA_a-n},\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}
