@@ -206,11 +206,11 @@ $$
 
 To solve $LC_i$ and $LD_j$ , when $LC_i$ or $LD_j$ is greater than the amount of existing collateral or liabilities, it can be reduced in equal proportion.
 
-**Asset Segregation**
+**Isolated Assets**
 
-To meet the demand for lending on long-tail assets, for long-tail assets users are allowed to lend in segregated mode. Unlike regular assets, where users must enter segregated mode, long-tail assets can only be used as collateral, can only be borrowed against stablecoin assets and have a debt cap. The debt cap allows for good control of risk, thus avoiding a sharp increase in bad debt due to price volatility of long-tail assets.
+When new assets are listed, the entire liquidity pool is exposed, which means that users using newly collateralized assets may borrow the entire available liquidity. This significantly limits the ability of the protocol to add new assets, as each new asset increases liquidity and solvency risk. The protocol solves this problem through isolation mode.
 
-Overall, the omnichain lending application builds on the proven practices of the Aave and Compuond protocols, while improving on their shortcomings. Compared with Aave and Compuond: for users, it enables one-click deposit on chain A and lending operation on chain B, reducing the learning cost for users. For the clearer, it reduces the clearing stale cost and reduces MEV. for the protocol, it improves the risk resistance.
+Assets that have no supply in the protocol can be set as isolated assets through governance. Isolated assets can be set to normal assets through governance at any time. Isolated assets have a specific debt ceiling. Borrowers using isolated assets as collateral can only use that specific asset as collateral and cannot activate any other assets (including other isolated assets). Isolated assets can only lend stablecoin assets. Enter isolated mode by setting isolated assets as collateral. Exit isolated mode by prohibiting isolated assets from being used as collateral.
 
 ### 2.2.2 PMM
 
