@@ -53,8 +53,8 @@ $$
 
 $$
 fee=\int_{n_{start}}^n\lambda=\begin{cases}
-0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\
--\lambda_1*\frac{1 - \alpha_1 * EP_a}{\alpha_1 * EP_a} * (n-n_{start})+\frac{\lambda_1 * ln2 * (CTA_a - CA_a) }{\alpha_1 * EP_a} * log_2\frac{CTA_a-n_{start}}{CTA_a-n},\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
+0,\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\gt\alpha_1\\
+\-\lambda_1*\frac{1 - \alpha_1 * EP_a}{\alpha_1 * EP_a} * (n-n_{start})+\frac{\lambda_1 * ln2 * (CTA_a - CA_a) }{\alpha_1 * EP_a} * log_2\frac{CTA_a-n_{start}}{CTA_a-n},\frac{CA_a-n}{CTA_a-n} * \frac{1}{EP_a}\le\alpha_1
 \end{cases}
 $$
 
