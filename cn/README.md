@@ -87,7 +87,7 @@ $$U_c=\frac{D_c}{D_c+L_c}$$
 借款利率：Aave和Compound使用静态线性利率模型来决定协议的借贷成本。简单来说，当从池子里的借贷需求增加或者供应减少，利率上升，而当供应增加或者借贷需求减少，利率下降。 $BR_b$代表基础借款利率。 $U_{optimal}$代表最佳资金利用率。 $BR_{slope1}$代表当前资金利用率低于最佳资金利用率时，利率与利用率的比例关系的常数。 $BR_{slope2}$代表当前资金利用率高于最佳资金利用率时，利率与利用率的比例关系的常数。 $BR_c$代表当前借款利率。
 
 $$BR_c=\begin{cases}
-BR_b+U_c*BR_{slope1}\,U_c\lt U_{optimal}\\
+BR_b+\frac{U_c}{U_{optimal}}*BR_{slope1}\,U_c\lt U_{optimal}\\
 BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\geq U_{optimal}
 \end{cases}$$
 

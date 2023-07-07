@@ -87,7 +87,7 @@ $$U_c=\frac{D_c}{D_c+L_c}$$
 Borrowing rate: Aave and Compound use a static linear interest rate model to determine the borrowing cost of the agreement. Simply put, when the demand for borrowing from the pool increases or the supply decreases, the interest rate increases, while when the supply increases or the demand for borrowing decreases, the interest rate decreases. $BR_b$ represents the base borrowing rate. $U_{optimal}$ represents the optimal funding utilization rate. $BR_{slope1}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is lower than the optimal funding utilization rate. $BR_{slope2}$ represents the constant of the ratio of interest rate to utilization rate when the current funding utilization rate is higher than the optimal funding utilization rate. $BR_c$ represents the current borrowing rate.
 
 $$BR_c=\begin{cases}
-BR_b+U_c*BR_{slope1}\,U_c\lt U_{optimal}\\
+BR_b+\frac{U_c}{U_{optimal}}*BR_{slope1}\,U_c\lt U_{optimal}\\
 BR_b+BR_{slope1}+\frac{U_c-U_{optimal}}{1-U_{optimal}}*BR_{slope2}\,U_c\geq U_{optimal}\\
 \end{cases}$$
 
